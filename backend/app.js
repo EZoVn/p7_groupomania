@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 
-
 /**Chargement du fichier .env */
 require('dotenv').config();
 
@@ -14,8 +13,10 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     next();
 });
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 // Routes API
-app.use('/', usersRoutes);
+app.use('/users', usersRoutes);
 
 module.exports = app;

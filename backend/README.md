@@ -1,1 +1,10 @@
 npm install 
+
+.env
+
+PORT=''
+HOST=''
+USER_DB=''
+PASSWORD_DB=''
+DATABASE=''
+PORT_DB=''

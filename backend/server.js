@@ -1,5 +1,8 @@
 const app = require('./app');
 
+// test sequelize
+const DB = require('./database');
+
 const normalizePort = val => {
     const port = parseInt(val, 10);
     if (isNaN(port)) {
@@ -30,12 +33,21 @@ const errorHandler = error => {
     }
 };
 
+// Start server avec database sequelize
+DB.authenticate()
+    .then(() => console.log('Database connection OK'))
+    .then(() => {
+        const server = app.listen(port);
+        server.on('error', errorHandler);
+        server.on('listening', () => {
+            const address = server.address();
+            const bind = typeof address === 'string' ? 'pipe' + address : 'port: ' + port;
+            console.log('Listening on ' + bind);
+        });
+    })
+    .catch(e => console.log('Database Error', e));
 
-const server = app.listen(port);
 
-server.on('error', errorHandler);
-server.on('listening', () => {
-    const address = server.address();
-    const bind = typeof address === 'string' ? 'pipe' + address : 'port: ' + port;
-    console.log('Listening on ' + bind);
-});
+
+
+
