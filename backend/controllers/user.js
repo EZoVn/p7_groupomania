@@ -6,6 +6,7 @@ const User = require('../models/User');
 // const User = db.User;
 
 
+
 // test
 exports.allUsers = (req, res) => {
     User.findAll()
@@ -26,7 +27,7 @@ exports.oneUser = (req, res) => {
             if ((user === null)) {
                 return res.status(404).json({ message: 'User introuvable' })
             }
-            return res.status(200).json({data: user});
+            return res.status(200).json({ data: user });
         })
         .catch(err => res.status(500).json({ message: 'Database Error', error: err }));
 };
@@ -62,11 +63,11 @@ exports.signup = (req, res) => {
                         .then(user => {
                             res.status(201).json({ message: 'Utilisateur crée', data: user })
                         })
-                        .catch(err => res.status(500).json({ message: 'Database Erri'}));
+                        .catch(err => res.status(500).json({ message: 'Database Erri' }));
                 })
-                .catch(err => res.status(500).json({ message: 'Database Error'}));
+                .catch(err => res.status(500).json({ message: 'Database Error' }));
         })
-        .catch(err => res.status(500).json({ message: 'Database Erro'}));
+        .catch(err => res.status(500).json({ message: 'Database Erro' }));
 };
 
 // exports.signup = (req, res) => {
@@ -101,22 +102,53 @@ exports.signup = (req, res) => {
 
 
 // Connexion avec mail et mdp
-exports.login = (req, res, next) => {
-    db.query(
-        `SELECT email FROM Users WHERE email = ${mail} AND password = ${password}`,
-        (err, results) => {
-            if (err) res.status(401).send({ err: err });
-            if (results > 0) {
-                return res.render('register', { message: 'That email is already in use' })
-            }
-            res.send({ message: 'Wrong email/password' });
-        });
-    console.log(User);
-};
+// exports.login = (req, res, next) => {
+//     db.query(
+//         `SELECT email FROM Users WHERE email = ${mail} AND password = ${password}`,
+//         (err, results) => {
+//             if (err) res.status(401).send({ err: err });
+//             if (results > 0) {
+//                 return res.render('register', { message: 'That email is already in use' })
+//             }
+//             res.send({ message: 'Wrong email/password' });
+//         });
+//     console.log(User);
+// };
 
 
 // Modifier compte user
+exports.modifyAccount = (req, res) => {
+    let userId = parseInt(req.params.id)
+    if (!userId) {
+        return res.status(400).json({ message: `Erreur id` })
+    }
+    User.findOne({ where: { id: userId }, raw: true })
+        .then(user => {
 
+            if (user === null) {
+                return res.status(404).json({ message: 'Utilisateur inéxistant !' })
+            }
+            console.log(req.body);
+            console.log(user);
+            if (user == 0) return res.json({ message: 'Aucune modification apporté' });
+            // Le mot de passe est toujours different etant donner qu'il compare un hash a un clean
+            if (user.password !== req.body.password) {
+                console.log('mdp changes');
+                bcrypt.hash(req.body.password, parseInt(process.env.BCRYPT_SALT_ROUND))
+                    .then(hash => {
+                        req.body.password = hash;
+                        User.update(req.body, { where: { id: userId } })
+                            .then(user => {
+
+                                res.status(200).json({ message: 'Compte mis à jour', data: user })
+                            })
+                            .catch(err => res.status(500).json({ message: 'Database Error' }));
+                    })
+                    .catch(err => res.status(500).json({ message: 'Database Error' }));
+            }
+        })
+        .catch(err => res.status(500).json({ message: 'Database Error' }));
+};
 // exports.modifyEmail = (req, res, next) => {
 //     let id = 5;
 //     let newMail = 'zyxwvutsr@email.com';
@@ -135,6 +167,6 @@ exports.deleteAccount = (req, res) => {
         return res.status(400).json({ message: `Erreur id` })
     }
     User.destroy({ where: { id: userId }, force: true })
-        .then(() => res.status(204).json({message: 'Compte supprimé avec succès !'}))
+        .then(() => res.status(204).json({ message: 'Compte supprimé avec succès !' }))
         .catch(err => res.status(500).json({ message: 'Database Error', error: err })); //Supprimer error: err en production
 };

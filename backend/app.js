@@ -1,10 +1,16 @@
 const express = require('express');
 const app = express();
 
+const authRouter = require('./routes/auth');
+const postRouter = require('./routes/post');
+const authCheck = require("./middleware/auth");
 /**Chargement du fichier .env */
 require('dotenv').config();
 
+/**Routes */
 const usersRoutes = require('./routes/user');
+
+
 
 /**CORS */
 app.use((req, res, next) => {
@@ -17,6 +23,9 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 // Routes API
+app.use('/auth', authRouter);
+// app.use('/users', authCheck, usersRoutes);
 app.use('/users', usersRoutes);
+app.use('/post', postRouter);
 
 module.exports = app;

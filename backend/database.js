@@ -1,4 +1,4 @@
-const mysql = require('mysql2');
+const mysql = require('mysql');
 /**Chargement du fichier .env */
 require('dotenv').config();
 
