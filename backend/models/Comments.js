@@ -8,5 +8,6 @@ module.exports = (sequelize) => {
         id: { type: DataTypes.INTEGER(11), primaryKey: true, autoIncrement: true, },
         user_id: { type: DataTypes.INTEGER(11), allowNull: false },
         comment: { type: DataTypes.TEXT, defaultValue: '', allowNull: false },
+        post_id: {type: DataTypes.INTEGER(10), allowNull: false}
     });
 };
