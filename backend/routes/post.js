@@ -14,8 +14,9 @@ router.use((req, res, next) => {
 
 router.get('/', postCtrl.getAllPost);
 router.get('/:id', postCtrl.getOnePost);
-router.put('/', postCtrl.createPost);
-router.delete('/:id', postCtrl.deletePost);
-router.patch('/:id', postCtrl.modifyPost);
+router.get('/postUser/:user_id', postCtrl.getAllPostUser);
+router.put('/',authCheck, postCtrl.createPost);
+router.delete('/:id',authCheck, postCtrl.deletePost);
+router.patch('/:id',authCheck, postCtrl.modifyPost);
 
 module.exports = router;

@@ -1,4 +1,6 @@
-const Post = require('../models/Post');
+const { User } = require('../database');
+const DB = require('../database');
+const Post = DB.Post;
 
 // Crée un post avec une image ou sans image
 exports.createPost = async (req, res, next) => {
@@ -8,11 +10,8 @@ exports.createPost = async (req, res, next) => {
     }
     // Manque la gestion des images 
     try {
-        // let post = await Post.findOne({ where: { user_Id: user_id }, raw: true })
-        // if (post === null) {
-        //     return res.status(409).json({ message: `Le message ${user_Id} exist déjà !` })
-        // }
-        post = await Post.create(req.body);
+
+        let post = await Post.create(req.body);
         return res.status(201).json({ message: 'Message crées avec succès !!', data: post })
 
     } catch (err) {
@@ -47,9 +46,17 @@ exports.deletePost = (req, res, next) => {
         .catch(err => res.status(500).json({ message: 'Database Error', error: err })); //Supprimer error: err en production
 };
 
-// Afficher tous les posts d'un utilisateur
+// Afficher tous les posts d'un utilisateur non terminé !!!!
 exports.getAllPostUser = async (req, res, next) => {
     let user_id = parseInt(req.params.user_id);
+    console.log(user_id);
+    if (!user_id) {
+        return res.status(404).json({ message: `Cette utilisateur n'a pas de post` })
+    }
+    Post.findAll({where: {user_id: user_id}})
+        .then(posts => {
+            res.json({data: posts})})
+        .catch(err => res.status(500).json({ message: 'Database Error' }));
 };
 
 // Afficher un post grace a son ID
@@ -58,10 +65,10 @@ exports.getOnePost = async (req, res, next) => {
     if (!postId) return res.status(400).json({ message: 'Post non trouvé' });
 
     try {
-        let post = await Post.findOne({ where: { id: postId }, raw: true });
+        let post = await Post.findOne({ where: { id: postId }, raw: true, include: { model: User, attributes: ['id', 'pseudo', 'email'] } });
         if (post === null) return res.status(404).json({ message: `Le message n'existe pas` })
 
-        return res.status(200).json({ data: post, message: 'Message trouvé avec succès !' })
+        return res.status(200).json({ data: post })
 
     } catch (err) {
         return res.status(500).json({ message: 'Database Error' })

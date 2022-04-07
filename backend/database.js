@@ -1,28 +1,9 @@
-const mysql = require('mysql');
+const { Sequelize } = require('sequelize');
 /**Chargement du fichier .env */
 require('dotenv').config();
 
 
-// const connexion = mysql.createConnection({
-//     host: process.env.HOST,
-//     user: process.env.USER_DB,
-//     password: process.env.PASSWORD_DB,
-//     database: process.env.DATABASE,
-//     // ??? est-ce indispensable ???
-//     port: process.env.PORT_DB
-// });
-
-// connexion.connect((error) => {
-//     if (error) {
-//         console.log(error.message);
-//     }
-//     console.log('Vous etes connecter à la base de donnée ' + process.env.DATABASE);
-// });
-
-// module.exports = connexion;
-
 // test connexion avec sequelize
-const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize(
     process.env.DATABASE, process.env.USER_DB, process.env.PASSWORD_DB, {
@@ -36,9 +17,28 @@ const sequelize = new Sequelize(
 }
 );
 
-// synchronisation des models
-sequelize.sync((err) => {
-    console.log('Database Sync OK', err);
-})
+/**Mise en palce des relations entre les tables 
+ * 
+ * je ramene mes models dans ce fichier
+ * a chaque model j'envoi sequelize ligne 8
+*/
+const db = {};
 
-module.exports = sequelize;
+db.sequelize = sequelize;
+db.User = require('./models/User')(sequelize);
+db.Post = require('./models/Post')(sequelize);
+db.Comments = require('./models/Comments')(sequelize);
+
+/**User peu avoir plusieurs Post 
+ * foreignKey choisit le champ dedié pour la clé de liaison
+ * onDelete sur User supprime les posts en cas de suppression du compte
+*/
+
+db.User.hasMany(db.Post, { foreignKey: 'user_id', onDelete: 'cascade' });
+db.Post.belongsTo(db.User, { foreignKey: 'user_id' });
+
+
+
+db.sequelize.sync({ alter: true })
+
+module.exports = db;

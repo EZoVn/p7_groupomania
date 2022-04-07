@@ -1,6 +1,5 @@
 const app = require('./app');
 
-// test sequelize
 const DB = require('./database');
 
 const normalizePort = val => {
@@ -34,7 +33,7 @@ const errorHandler = error => {
 };
 
 // Start server avec database sequelize
-DB.authenticate()
+DB.sequelize.authenticate()
     .then(() => console.log('Database connection OK'))
     .then(() => {
         const server = app.listen(port);

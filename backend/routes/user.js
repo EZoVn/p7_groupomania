@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const authCheck = require('../middleware/auth');
 
+const authCheck = require('../middleware/auth');
 const userCtrl = require('../controllers/user');
 
 
@@ -13,12 +13,11 @@ router.use((req, res, next) => {
     next();
 })
 
-router.get('/', authCheck, userCtrl.allUsers);
+router.get('/',  userCtrl.allUsers);
 router.get('/:id', authCheck, userCtrl.oneUser);
 router.put('/signup', userCtrl.signup);
 
-router.delete('/:id', userCtrl.deleteAccount);
-
+router.delete('/:id',authCheck, userCtrl.deleteAccount);
 router.patch('/:id',authCheck ,userCtrl.modifyAccount);
 
 
