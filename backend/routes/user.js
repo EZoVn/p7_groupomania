@@ -13,9 +13,9 @@ router.use((req, res, next) => {
     next();
 })
 
+router.put('/signup', userCtrl.signup);
 router.get('/',  userCtrl.allUsers);
 router.get('/:id', authCheck, userCtrl.oneUser);
-router.put('/signup', userCtrl.signup);
 
 router.delete('/:id',authCheck, userCtrl.deleteAccount);
 router.patch('/:id',authCheck ,userCtrl.modifyAccount);

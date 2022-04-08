@@ -6,16 +6,15 @@ const fs = require('fs');
 // Crée un post avec une image ou sans image
 exports.createPost = async (req, res, next) => {
     const { user_id, message, imgUrl } = req.body;
+    // Il sera peut etre possible de mettre juste une image sans texte
     if (!user_id || !message) {
         return res.status(404).json({ message: 'Aucun message, data manquante. Un des parametres nest pas rempli' });
     }
-    // essai possible avec un url image mais pas encore essayer avec un fichier
-    // if (imgUrl !== null) {
-    //     console.log(imgUrl);
-    //     imgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-    //     console.log(imgUrl);
-    //     next();
-    // }
+
+    if (req.file) {
+        imgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+        console.log(imgUrl);
+    }
 
     try {
 
