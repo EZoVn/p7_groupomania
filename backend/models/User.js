@@ -13,18 +13,20 @@ module.exports = (sequelize) => {
         email: { type: DataTypes.STRING, unique: true, validate: { isEmail: true } },
         password: { type: DataTypes.STRING(128), is: /^[0-9a-f]{64$}/i }
     },
+    // a retirer
     {paranoid: true} //Soft delete mise en corbeille
     );
 
-    User.beforeCreate( async (user, options) => {
-        let hash = await bcrypt.hash(user.password, parseInt(process.env.BCRYPT_SALT_ROUND))
-        user.password = hash;
-    });
-    
     User.checkPassword = async (password, originel) => {
         return await bcrypt.compare(password, originel);
     };
     
+    // Hooks
+    User.beforeCreate( async (user, options) => {
+        let hash = await bcrypt.hash(user.password, parseInt(process.env.BCRYPT_SALT_ROUND))
+        user.password = hash;
+    });
+
     User.beforeUpdate( async (user, options) => {
         let hash = await bcrypt.hash(user.password, parseInt(process.env.BCRYPT_SALT_ROUND))
         user.password = hash;

@@ -48,6 +48,7 @@ exports.deletePost = (req, res, next) => {
     if (!postId) {
         return res.status(404).json({ message: `ID non connu` })
     }
+    // supprimer le fichier sil existe
     DB.Post.destroy({ where: { id: postId }, force: true })
         .then(() => res.status(200).json({ message: 'Message supprimé avec succès !' }))
         .catch(err => res.status(500).json({ message: 'Database Error', error: err })); //Supprimer error: err en production
@@ -74,6 +75,7 @@ exports.getOnePost = async (req, res, next) => {
 
     try {
         let post = await DB.Post.findOne({ where: { id: postId }, raw: true, include: { model: DB.User, attributes: ['id', 'pseudo', 'email'] }, });
+        // let post = await DB.Post.findOne({ where: { id: postId }, raw: true, include: [{ model: DB.User }, {model:DB.Comments}] });
         if (post === null) return res.status(404).json({ message: `Le message n'existe pas` })
 
         return res.status(200).json({ data: post })
