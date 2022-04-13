@@ -3,8 +3,10 @@ import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <template>
-  <header>
-    <img alt="Groupomania logo" class="logo" src="@/assets/images/icon-left-font-monochrome-white.png" width="125" height="125" />
+
+  <main>
+    <img alt="Groupomania logo" class="logo" src="@/assets/images/icon-left-font-monochrome-white.png" width="125"
+      height="125" />
 
     <div class="wrapper">
 
@@ -12,10 +14,11 @@ import { RouterLink, RouterView } from 'vue-router'
 
         <RouterLink to="/">Log</RouterLink>
         <RouterLink to="/post">Tous les posts</RouterLink>
+        <RouterLink to="/profil">Profil</RouterLink>
       </nav>
     </div>
-  <RouterView />
-  </header>
+    <RouterView />
+  </main>
 
 </template>
 
@@ -29,7 +32,7 @@ $grey: #b8b8b9;
 // reset css
 @import "@/assets/reset.css";
 
-*{
+* {
   // roboto pour les titres
   font-family: 'roboto', sans-serif;
   margin: 0;
@@ -39,21 +42,21 @@ $grey: #b8b8b9;
   // font-family: 'montserrat', sans-serif;
 }
 
-body{
-  background-image: linear-gradient(45deg, $blue 0%, $grey 100%);
+body {
+  background-image: linear-gradient(57deg, $blue 0%, $grey 100%);
   display: flex;
-  align-items: center;
-  justify-content: center;
+
   min-height: 100vh;
   padding: 30px;
 }
+
 #app {
   max-width: 100%;
   // background-color: $blue;
   margin: 0 auto;
   padding: 2rem;
 
-  font-weight: normal;
+  // font-weight: normal;
 }
 
 .logo {
@@ -89,32 +92,31 @@ body{
   }
 }
 
-.button{
+.button {
   background: $blue;
-    color:white;
-    border-radius: 8px;
-    font-weight: 800;
-    font-size: 15px;
-    border: none;
-    width: 100%;
-    padding: 16px;
-    transition: .4s background-color;
-    &:hover {
-    cursor:pointer;
+  color: white;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 15px;
+  border: none;
+  width: 100%;
+  padding: 16px;
+  transition: .4s background-color;
+
+  &:hover {
+    cursor: pointer;
     background-color: rgba(21, 20, 26, .7);
     color: $grey;
   }
+
   &--disabled {
-    background:$grey;
-    color:#ececec;
+    background: $grey;
+    color: #ececec;
+
     &:hover {
-    cursor:not-allowed;
-    background:$red;
-  }
+      cursor: not-allowed;
+      background: $red;
+    }
   }
 }
-
-
-
-
 </style>

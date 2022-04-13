@@ -1,14 +1,14 @@
-<script>
+<script setup>
 import Post from "../components/Post.vue";
-// import Post from "@/components/Post.vue";
 
 
 </script>
 
 <template>
-    <div>
+    <section>
         <div class="card">
-            <input type="text" id="" class="card__newPost" placeholder="Quoi de neuf ?"/>
+            <!-- <input type="text" id="" class="card__newPost" placeholder="Quoi de neuf ?"/> -->
+            <textarea name="newPost" class="card__newPost" id="" placeholder="Quoi de neuf ?" cols="30" rows="10"></textarea>
             <div class="btn">
 
                 <button name="ajoutPhoto" class="button">Ajouter une photo</button>
@@ -18,10 +18,11 @@ import Post from "../components/Post.vue";
             </div>
         </div>
 
-        <!-- <Post /> -->
-    <!-- <Post/> -->
+        <Post />
+        <Post />
+        <Post />
 
-        <div class="card">
+        <!-- <div class="card">
             <div class="card__post">
                 <p class="card__title">@Vince2</p>
                 <p class="card__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce interdum hendrerit
@@ -46,13 +47,13 @@ import Post from "../components/Post.vue";
                 <img class="card__img" src="imageUrl" alt="description image">
             </div>
 
-            <!-- Afficher tous les commentaires -->
+            // Afficher tous les commentaires
             <div class="card__comment">
                 <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.</p>
             </div>
-        </div>
-
-    </div>
+        </div> -->
+    
+    </section>
 
 </template>
 
@@ -67,32 +68,14 @@ import Post from "../components/Post.vue";
 .button {
     margin: 0 20px ;
 }
-.card {
-    margin: 10px;
-    padding: 10px;
+.card{
+    width: 100%;
     &__newPost{
         margin-bottom: 10px;
         height: 100px;
         width: 100%;
+        padding: 10px;
         border-radius: 16px;
-    }
-    &__post {
-        border: 2px solid red;
-    }
-
-    &__title {
-        text-align: start;
-        margin: 5px 0 20px 30px;
-    }
-
-    &__text {
-        font-family: 'montserrat', sans-serif;
-        margin: 22px;
-    }
-
-    &__comment {
-        margin: 5px;
-        border: 1px dashed blue;
     }
 }
 </style>
