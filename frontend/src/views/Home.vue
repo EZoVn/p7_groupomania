@@ -1,4 +1,6 @@
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'Home',
   data: function () {
@@ -7,6 +9,7 @@ export default {
       pseudo: '',
       email: '',
       password: '',
+      passwordVerif: '',
     }
   },
   computed: {
@@ -18,7 +21,8 @@ export default {
         if (this.email != '' && this.password != '') return true;
         else return false;
       }
-    }
+    },
+    ...mapState(['status'])
 
   },
   methods: {
@@ -28,6 +32,22 @@ export default {
     switchLogin: function () {
       this.mode = 'login';
     },
+    createAccount: function () {
+      if (this.password != this.passwordVerif) {
+        return console.error('Mot de passe non identique');
+      }
+      this.$store.dispatch('createAccount', {
+        pseudo: this.pseudo,
+        email: this.email,
+        password: this.password,
+      })
+    },
+    login: function () {
+      this.$store.dispatch('login', {
+        email: this.email,
+        password: this.password,
+      })
+    }
   }
 }
 </script>
@@ -49,10 +69,25 @@ export default {
     <div class="form-row">
       <input v-model="password" class="form-row__input" type="password" placeholder="Mot de passe">
     </div>
-
     <div class="form-row">
-      <button v-if="mode == 'login'" class="button" :class="{'button--disabled' : !validatedFields}">Connexion</button>
-      <button v-else class="button" :class="{'button--disabled' : !validatedFields}">Créer mon compte</button>
+      <input v-if="mode == 'create'" v-model="passwordVerif" class="form-row__input" type="password"
+        placeholder="Vérification mot de passe">
+    </div>
+    <div class="form-row" v-if="mode == 'login' && status == 'error_login'">
+      Adresse mail et/ou mot de passe invalide
+    </div>
+    <div class="form-row" v-if="mode == 'create' && status == 'error_create'">
+      Adresse mail déjà utilisée
+    </div>
+    <div class="form-row">
+      <button v-if="mode == 'login'" @click="login()" class="button" :class="{ 'button--disabled': !validatedFields }">
+        <span v-if="status == 'loading'">Connexion en cours...</span>
+        <span v-else>Connexion</span>
+      </button>
+      <button v-else @click="createAccount()" class="button" :class="{ 'button--disabled': !validatedFields }">
+        <span v-if="status == 'loading'">Création en cours...</span>
+        <span v-else>Créer mon compte</span>
+      </button>
     </div>
   </div>
 

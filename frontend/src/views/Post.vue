@@ -1,26 +1,56 @@
 <script setup>
 import Post from "../components/Post.vue";
+// import axios from 'axios';
 
+// let posts = function getPosts() {
+//     axios.get('http://localhost:8080/post/')
+//     // let posts = await res.data;
+//     // return posts;
+//         .then(res => this.posts = res.data)
+//         .catch(e => console.log(e))
+// }
+
+// export default {
+//     name: 'Post',
+//     data() {
+//         return {
+//             posts: [],
+//         }
+//     },
+//     mounted() {
+//         axios.get('http://localhost:8080/post/')
+//             .then((res) => {
+//                 this.posts = res.data
+//                 console.log(this.pays);
+//                 })
+//             .catch(e => console.log(e))
+//     }
+// }
 
 </script>
 
 <template>
     <section>
+        <!-- <button v-on:click="getPosts()">appuie ici</button> -->
+
         <div class="card">
             <!-- <input type="text" id="" class="card__newPost" placeholder="Quoi de neuf ?"/> -->
-            <textarea name="newPost" class="card__newPost" id="" placeholder="Quoi de neuf ?" cols="30" rows="10"></textarea>
+            <textarea name="newPost" class="card__newPost" id="" placeholder="Quoi de neuf ?" cols="30"
+                rows="10"></textarea>
             <div class="btn">
 
                 <button name="ajoutPhoto" class="button">Ajouter une photo</button>
-            <!-- emoji  -->
-            <!-- gif -->
-            <button class="button">Envoyer</button>
+                <!-- emoji  -->
+                <!-- gif -->
+                <button class="button">Envoyer</button>
             </div>
         </div>
 
         <Post />
-        <Post />
-        <Post />
+        <!-- <Post />
+        <Post /> -->
+
+
 
         <!-- <div class="card">
             <div class="card__post">
@@ -52,25 +82,49 @@ import Post from "../components/Post.vue";
                 <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.</p>
             </div>
         </div> -->
-    
+
+
+        <!-- <div :key="index" v-for="(post, index) in posts" class="card">
+
+            <div class="card__profil">
+                <img class="test" src="../assets/images/InZooPic.png" alt="Photo de profil" />
+                <p class="card__title">{{ post.user_id }}</p>
+            </div>
+
+            <div>
+                <p class="card__text">
+                    {{ post.message }}
+                    
+                </p>
+                <img class="card__img" src="" alt="description image" />
+            </div>
+            <div class="comment">
+                <p>
+                    Neque porro quisquam est qui dolorem ipsum quia dolor sit amet,
+                    consectetur, adipisci velit.
+                </p>
+            </div>
+        </div> -->
     </section>
 
 </template>
 
 <style lang="scss" scoped>
-
-.btn{
+.btn {
     display: flex;
     flex-direction: row;
     // justify-content:space-between;
 
 }
+
 .button {
-    margin: 0 20px ;
+    margin: 0 20px;
 }
-.card{
+
+.card {
     width: 100%;
-    &__newPost{
+
+    &__newPost {
         margin-bottom: 10px;
         height: 100px;
         width: 100%;
