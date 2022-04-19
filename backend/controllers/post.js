@@ -74,8 +74,8 @@ exports.getOnePost = async (req, res, next) => {
     if (!postId) return res.status(400).json({ message: 'Post non trouvé' });
 
     try {
-        let post = await DB.Post.findOne({ where: { id: postId }, raw: true, include: { model: DB.User, attributes: ['id', 'pseudo', 'email'] }, });
-        // let post = await DB.Post.findOne({ where: { id: postId }, raw: true, include: [{ model: DB.User }, {model:DB.Comments}] });
+        // let post = await DB.Post.findOne({ where: { id: postId }, raw: true, include: { model: DB.User, attributes: ['id', 'pseudo', 'email'] }, });
+        let post = await DB.Post.findOne({ where: { id: postId }, raw: true, include: [{ model: DB.User, attributes: ['id', 'pseudo', 'email'] }, { model: DB.Comments }] });
         if (post === null) return res.status(404).json({ message: `Le message n'existe pas` })
 
         return res.status(200).json({ data: post })
@@ -87,7 +87,7 @@ exports.getOnePost = async (req, res, next) => {
 
 // Afficher tous les posts sur le forum
 exports.getAllPost = (req, res, next) => {
-    DB.Post.findAll()
+    DB.Post.findAll({ include: [{ model: DB.User, attributes: ['id', 'pseudo', 'email'] }, { model: DB.Comments }] })
         .then(post => res.json({ data: post }))
         .catch(err => res.status(500).json({ message: 'Database Error' }));
 };

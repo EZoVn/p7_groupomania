@@ -12,9 +12,13 @@ import { RouterLink, RouterView } from 'vue-router'
 
       <nav>
 
-        <RouterLink to="/">Log</RouterLink>
-        <RouterLink to="/post">Tous les posts</RouterLink>
-        <RouterLink to="/profil">Profil</RouterLink>
+        <RouterLink to="/">Log </RouterLink>
+        <span> // </span>
+        <RouterLink to="/post">Tous les posts </RouterLink>
+        <span> // </span>
+        <RouterLink to="/profil">Profil </RouterLink>
+        <span> // </span>
+        <RouterLink to="/test">Page de test </RouterLink>
       </nav>
     </div>
     <RouterView />

@@ -1,9 +1,15 @@
 <script setup>
 import Post from "../components/Post.vue";
+
+const getAllPost = function () {
+      console.log(this.$store.state.user);
+    }
 </script>
 
 <template>
   <div>
+<button @click="getAllPost">clique</button>
+
     <div class="card">
       <img
         class="card__profil--img" src="../assets/images/InZooPic.png" alt="Photo de profil" />
@@ -14,7 +20,7 @@ import Post from "../components/Post.vue";
       </p>
     </div>
     <!-- post du profil -->
-    <Post />
+    <!-- <Post /> -->
   </div>
   
 </template>
