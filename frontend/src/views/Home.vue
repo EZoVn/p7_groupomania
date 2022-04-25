@@ -1,8 +1,8 @@
 <script>
 import { mapState } from 'vuex'
-
 export default {
   name: 'Home',
+  
   data: function () {
     return {
       mode: 'login',
@@ -10,6 +10,12 @@ export default {
       email: '',
       password: '',
       passwordVerif: '',
+    }
+  },
+   mounted: function () {
+    if (this.$store.state.user.userId != -1) {
+      this.$router.push('/profil');
+      return ;
     }
   },
   computed: {
@@ -45,8 +51,10 @@ export default {
     login: function () {
       this.$store.dispatch('login', {
         email: this.email,
-        password: this.password,
-      })
+        password: this.password
+      }).then( () => {
+          this.$router.push('/post');
+        })
     }
   }
 }
@@ -94,6 +102,34 @@ export default {
 </template>
 
 <style lang="scss">
+.card {
+  max-width: 100%;
+  width: 540px;
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+
+  &__title {
+    text-align: center;
+    font-weight: 800;
+  }
+
+  &__subtitle {
+    text-align: center;
+    color: #666;
+    font-weight: 500;
+  }
+
+  &__action {
+    color: #2196F3;
+    text-decoration: underline;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
 .form-row {
   display: flex;
   margin: 16px 0px;

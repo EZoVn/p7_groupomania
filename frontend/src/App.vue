@@ -1,5 +1,18 @@
-<script setup>
+<script >
 import { RouterLink, RouterView } from 'vue-router'
+
+export default {
+  name: 'App',
+  methods:{
+    logout: function() {
+      this.$store.commit('logout'),
+      this.$router.push('/')
+    }
+  }
+}
+
+
+
 </script>
 
 <template>
@@ -10,6 +23,8 @@ import { RouterLink, RouterView } from 'vue-router'
 
     <div class="wrapper">
 
+      <button @click="logout()" class="deconnexion">Deconnexion</button>
+
       <nav>
 
         <RouterLink to="/">Log </RouterLink>
@@ -17,8 +32,7 @@ import { RouterLink, RouterView } from 'vue-router'
         <RouterLink to="/post">Tous les posts </RouterLink>
         <span> // </span>
         <RouterLink to="/profil">Profil </RouterLink>
-        <span> // </span>
-        <RouterLink to="/test">Page de test </RouterLink>
+
       </nav>
     </div>
     <RouterView />
@@ -27,10 +41,7 @@ import { RouterLink, RouterView } from 'vue-router'
 </template>
 
 <style lang="scss">
-// variable color
-$blue: #192946;
-$red: #d1515a;
-$grey: #b8b8b9;
+@import "@/assets/sass/_variables.scss";
 // Font family Roboto et montserrat
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,400;1,700&display=swap');
 // reset css
@@ -67,34 +78,24 @@ body {
   width: 200px;
   height: 200px;
 }
-
-.card {
-  max-width: 100%;
-  width: 540px;
-  background: white;
-  border-radius: 16px;
-  padding: 32px;
-
-  &__title {
-    text-align: center;
-    font-weight: 800;
-  }
-
-  &__subtitle {
-    text-align: center;
-    color: #666;
-    font-weight: 500;
-  }
-
-  &__action {
-    color: #2196F3;
-    text-decoration: underline;
-
-    &:hover {
-      cursor: pointer;
-    }
+.deconnexion{
+  display: none;
+  width: auto;
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  font-weight: 800;
+  font-size: 16px;
+  background-color: $red;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  padding: 5px;
+  &:hover{
+    cursor: pointer;
   }
 }
+
 
 .button {
   background: $blue;

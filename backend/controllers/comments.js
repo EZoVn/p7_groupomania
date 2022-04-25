@@ -23,7 +23,7 @@ exports.getAllCommentsPost = (req, res, next) => {
     console.log(postId);
     if (!postId) return res.status(404).json({ message: `Post non trouvé` });
     console.log(postId);
-    DB.Comments.findAll({ where: { post_id: postId } })
+    DB.Comments.findAll({ where: { post_id: postId }, include: { model: DB.User, attributes: ['id', 'pseudo', 'email'] } })
         .then(coms => res.json({ data: coms }))
         .catch(err => res.status(500).json({ message: 'Database Error' }));
 };
@@ -32,11 +32,11 @@ exports.getAllCommentsPost = (req, res, next) => {
 exports.getOneComment = async (req, res, next) => {
     let comId = parseInt(req.params.id);
     try {
-        comId = await DB.Comments.findOne({ where: { id: comId }, raw: true })
+        comId = await DB.Comments.findOne({ where: { id: comId }, raw: true, include: { model: DB.User, attributes: ['id', 'pseudo', 'email'] } })
         if (!comId) return res.status(404).json({ message: `Commentaire non trouvé` });
         return res.status(200).json({ data: comId })
     } catch (err) {
-        return res.status(500).json({ message: 'Database Error' })
+        return res.status(500).json({ message: 'Database Error', error: err })
     }
 };
 
@@ -49,7 +49,7 @@ exports.modifyComment = async (req, res, next) => {
             return res.status(404).json({ message: `Le commentaire ${comId} est inexistant !` })
         }
         await DB.Comments.update(req.body, { where: { id: comId } })
-        return res.status(200).json({message:'Commentaire modifié !'});
+        return res.status(200).json({ message: 'Commentaire modifié !' });
 
     } catch (err) {
         return res.status(500).json({ message: 'Database Error' })

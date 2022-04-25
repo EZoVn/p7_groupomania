@@ -40,6 +40,8 @@ db.Post.belongsTo(db.User, { foreignKey: 'user_id' });
 db.Post.hasMany(db.Comments, { foreignKey: 'post_id', onDelete: 'cascade' });
 db.Comments.belongsTo(db.Post, { foreignKey: 'post_id' });
 
+db.User.hasMany(db.Comments, { foreignKey: 'user_id', onDelete: 'cascade' });
+db.Comments.belongsTo(db.User, { foreignKey: 'user_id' });
 
 db.sequelize.sync({ alter: true })
 

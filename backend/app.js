@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 
+const path = require('path');
 const authRouter = require('./routes/auth');
 const postRouter = require('./routes/post');
 const commentsRouter = require('./routes/comments');
@@ -22,6 +23,9 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+
+/**Route images */
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // Routes API
 app.use('/auth', authRouter);

@@ -1,14 +1,16 @@
 <script setup>
 import Post from "../components/Post.vue";
+import {computed} from 'vue';
 
-const getAllPost = function () {
-      console.log(this.$store.state.user);
-    }
+const getAllPostUser = () => {
+  console.log('test');
+}
+
 </script>
 
 <template>
   <div>
-<button @click="getAllPost">clique</button>
+<button @click="getAllPostUser">clique</button>
 
     <div class="card">
       <img
@@ -26,7 +28,10 @@ const getAllPost = function () {
 </template>
 
 <style>
+.deconnexion{
+    display: block;
+}
 .card{
-  width:100%;
+  width:auto;
 }
 </style>

@@ -1,75 +1,95 @@
-<script setup>
+<!-- <script setup>
 import Post from "../components/Post.vue";
-// import { onMounted, ref } from 'vue';
-// import axios from 'axios';
 
+const addPost = () => {
+    console.log('test');
+//   axios.put('http://localhost:8080/post/')
+//     .then(res => res.data)
+}
+</script> -->
 
-// const posts = ref([])
+<script >
+import Post from "../components/Post.vue";
+import axios from 'axios'
 
-// onMounted(async () => {
-//     await axios.get('http://localhost:8080/post/')
-//         .then(res => posts.value = res.data)
-// })
+const instance = axios.create({
+    baseURL: 'http://localhost:8080',
+});
+let locale = localStorage.getItem('user');
+let user = JSON.parse(locale);
+console.log(user.user_id);
+export default {
+    name: Post,
+    components: {
+        Post,
+    },
+    data() {
+        return {
+            post: '',
+            image: null,
+        }
+    },
+    props: {
+        comment: {
+            modelValue: String
+        }
+    },
+    components: {
+        Post,
+    },
+    methods: {
+        onFileSelected(event) {
+            this.image = event.target.files[0]
+            console.log(this.image);
+        },
+        // Comment envoyer l'image erreur 500 renvoyer
+        async addPost(post) {
+            const fd = new FormData();
 
-// const comments = ref([]);
-// const com = onMounted(() => {
-//     axios.get('http://localhost:8080/comments/post/1')
-//         .then(res => comments.value = res.data);
-// })
+            // fd.append('image', this.image, this.image.name)
+            fd.append('image', this.image);
 
+            // fd.append('file', this.image)
+            console.log(fd);
+            await instance.put('/post/', {imgUrl:fd, message: this.post, user_id: user.user_id })
+                .then(res => {
+                    console.log(res);
 
+                })
+        },
+
+    }
+}
 </script>
 
 <template>
     <section>
 
         <div class="card">
-            <!-- <input type="text" id="" class="card__newPost" placeholder="Quoi de neuf ?"/> -->
-            <textarea name="newPost" class="card__newPost" id="" placeholder="Quoi de neuf ?" cols="30"
+            <textarea v-model="post" name="newPost" class="card__newPost" id="" placeholder="Quoi de neuf ?" cols="30"
                 rows="10"></textarea>
             <div class="btn">
-
-                <button name="ajoutPhoto" class="button">Ajouter une photo</button>
+                <input style="display:none" ref="imgInput" type="file" @change="onFileSelected">
+                <button @click="$refs.imgInput.click()" name="ajoutPhoto" class="button">Ajouter une photo</button>
                 <!-- emoji  -->
                 <!-- gif -->
-                <button class="button">Envoyer</button>
+                <button class="button" @click="addPost()">Envoyer</button>
             </div>
         </div>
 
         <Post />
 
-        <!-- <div :key="index" v-for="(post, index) in posts.data" class="card">
-
-            <div class="card__profil">
-                <img class="card__profil--img" src="../assets/images/InZooPic.png" alt="Photo de profil" />
-                <p class="card__title">{{ post.user_id }}</p>
-            </div>
-
-            <div>
-                <p class="card__text">
-                    {{ post.message }}
-                </p>
-                <img class="card__img" :src="post.imgUrl" alt="description image" />
-            </div>
-            <span>Commentaires : </span>
-            <div :key="index" v-for="(comment, index) in comments.data" class="comment">
-
-                <span>--------</span>
-                <p>
-                    user_id : {{ comment.user_id }}
-                </p>
-                <p>post_id : {{ comment.post_id }}</p>
-                <p>
-                    msg : {{ comment.comment }}
-                </p>
-            </div>
-            Ajouter un commentaire
-        </div> -->
     </section>
 
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss" >
+@import "@/assets/sass/_variables.scss";
+
+.deconnexion {
+    display: block;
+}
+
 .btn {
     display: flex;
     flex-direction: row;
@@ -91,10 +111,14 @@ import Post from "../components/Post.vue";
         border-radius: 16px;
     }
 }
-.button{
+
+.button {
+    background-color: $red;
+
     &:hover {
-    cursor: pointer;
-    background-color: #d1515a;
-  }
+        color: black;
+        cursor: pointer;
+        background-color: $grey;
+    }
 }
 </style>

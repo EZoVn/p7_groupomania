@@ -1,9 +1,9 @@
 <template>
   <div :key="index" v-for="(post, index) in posts.data" class="card">
-
     <div class="card__profil">
       <img class="card__profil--img" src="../assets/images/InZooPic.png" alt="Photo de profil" />
       <p class="card__title">{{ post.user_id }}</p>
+      <button @click="deletePost(post.id)" class="button">Supprimer le post</button>
     </div>
 
     <div>
@@ -16,46 +16,88 @@
     <br />
     <p v-if="post.Comments == ''"> Aucun commentaire ..</p>
     <div v-for="comment in post.Comments" class="card__comment">
-
-    <!-- user_id a remplacer par le pseudo -->
+      <p>log comment : {{ comment }}</p>
+      <!-- user_id a remplacer par le pseudo -->
       <p>user_id : {{ comment.user_id }}</p>
 
       <!-- Juste a titre informatif a retirer par la suite -->
       <p>post_id : {{ comment.post_id }}</p>
       <p>msg : {{ comment.comment }}</p>
     </div>
+
+    <div class="card">
+      <textarea :v-model="commentaire" name="newPost" class="card__newPost" id="" placeholder="Ajouter un commentaire " cols="30"
+        rows="10"></textarea>
+      <div class="btn">
+
+        <!-- emoji  -->
+        <!-- gif -->
+        <button @click="addComment(commentaire, post.id)" class="button">Envoyer</button>
+      </div>
+    </div>
   </div>
-
-
 </template>
 
-<script setup>
+<script >
+import { ref } from 'vue';
+import axios from 'axios';
+
+export default {
+
+  data() {
+
+    return {
+      posts: ref([]),
+      commentaire: ref(''),
+    }
+  },
+  
+  async created() {
+    this.posts = await axios.get('http://localhost:8080/post/')
+      .then(res => res.data);
+  },
+  methods: {
+    deletePost(postId) {
+      console.log('Le post :', postId, 'a été supprimer avec succès !');
+          axios.delete(`http://localhost:8080/post/${postId}`);    
+        },
+    addComment(commentaire, postId) {
+      console.log(postId);
+       console.log(this.commentaire);
+    }
+  }
+}
+</script>
+
+<!-- version script setup pour afficher les posts -->
+
+<!-- <script setup>
+
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
 
 
 const posts = ref([])
-const comments = ref([]);
+// const comments = ref([]);
 
-onMounted(async () => {
-  await axios.get('http://localhost:8080/post/')
+onMounted(() => {
+  axios.get('http://localhost:8080/post/')
     .then(res => posts.value = res.data);
 
   // await axios.get('http://localhost:8080/comments/post/1')
   //   .then(res => comments.value = res.data);
 })
-
-
-
-</script>
+</script> -->
 
 <style lang="scss">
+@import "@/assets/sass/_variables.scss";
+
 .card {
   width: auto;
   margin: 10px;
   padding: 10px;
-  background-color: #192946;
-  color: #b8b8b9;
+  background-color: $blue;
+  color: $grey;
 
   &__profil {
     display: flex;
@@ -72,7 +114,7 @@ onMounted(async () => {
   }
 
   &__post {
-    border: 2px solid red;
+    border: 2px solid $red;
   }
 
   &__text {
@@ -91,7 +133,7 @@ onMounted(async () => {
   &__comment {
     margin: 5px;
     padding: 15px;
-    border: 1px solid #d1515a;
+    border: 1px solid $red;
     border-radius: 25px;
   }
 }

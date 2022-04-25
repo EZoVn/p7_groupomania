@@ -24,8 +24,11 @@ router.use((req, res, next) => {
 router.get('/', postCtrl.getAllPost);
 router.get('/:id', postCtrl.getOnePost);
 router.get('/postUser/:user_id', postCtrl.getAllPostUser);
-router.put('/', authCheck, multer, postCtrl.createPost);
-router.delete('/:id', authCheck, multer, postCtrl.deletePost);
-router.patch('/:id', authCheck, multer, postCtrl.modifyPost);
+// router.put('/', authCheck, multer, postCtrl.createPost);
+// router.delete('/:id', authCheck, multer, postCtrl.deletePost);
+// router.patch('/:id', authCheck, multer, postCtrl.modifyPost);
+router.put('/', multer, postCtrl.createPost);
+router.delete('/:id', multer, postCtrl.deletePost);
+router.patch('/:id', multer, postCtrl.modifyPost);
 
 module.exports = router;
