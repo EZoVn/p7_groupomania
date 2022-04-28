@@ -11,6 +11,7 @@ module.exports = (sequelize) => {
         message: { type: DataTypes.TEXT, defaultValue: '', allowNull: false },
         // usersLiked: { type: DataTypes.STRING(255), unique: true },
         // usersDisliked: { type: DataTypes.STRING(255), unique: true },
+        // imgUrl: { type: DataTypes.STRING, name: DataTypes.STRING, data: DataTypes.BLOB, allowNull: true }
         imgUrl: { type: DataTypes.STRING, allowNull: true }
     });
 };

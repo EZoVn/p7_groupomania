@@ -1,12 +1,23 @@
-<!-- <script setup>
-import Post from "../components/Post.vue";
+<template>
+    <section>
 
-const addPost = () => {
-    console.log('test');
-//   axios.put('http://localhost:8080/post/')
-//     .then(res => res.data)
-}
-</script> -->
+        <div class="card">
+            <textarea v-model="post" name="newPost" class="card__newPost" id="" placeholder="Quoi de neuf ?" cols="30"
+                rows="10"></textarea>
+            <div class="btn">
+                <input style="display:none" ref="imgInput" type="file" @change="onFileSelected">
+                <button @click="$refs.imgInput.click()" name="ajoutPhoto" class="button">Ajouter une photo</button>
+                <!-- emoji  -->
+                <!-- gif -->
+                <button class="button" @click="addPost()">Envoyer</button>
+            </div>
+        </div>
+
+        <Post />
+
+    </section>
+
+</template>
 
 <script >
 import Post from "../components/Post.vue";
@@ -29,59 +40,30 @@ export default {
             image: null,
         }
     },
-    props: {
-        comment: {
-            modelValue: String
-        }
-    },
-    components: {
-        Post,
-    },
+
     methods: {
         onFileSelected(event) {
             this.image = event.target.files[0]
             console.log(this.image);
         },
         // Comment envoyer l'image erreur 500 renvoyer
-        async addPost(post) {
-            const fd = new FormData();
+        async addPost() {
+            const formData = new FormData();
+           formData.append('message', this.post);
+           formData.append('user_id', user.user_id);
+           formData.append('file', this.image);
+            console.log(formData);
+            // await instance.put('/post', {imgUrl:formData, message: this.post, user_id: user.user_id })
+            await instance.put('/post',formData)
+            .then(res => {
+                console.log(res);
 
-            // fd.append('image', this.image, this.image.name)
-            fd.append('image', this.image);
-
-            // fd.append('file', this.image)
-            console.log(fd);
-            await instance.put('/post/', {imgUrl:fd, message: this.post, user_id: user.user_id })
-                .then(res => {
-                    console.log(res);
-
-                })
+            })
         },
 
     }
 }
 </script>
-
-<template>
-    <section>
-
-        <div class="card">
-            <textarea v-model="post" name="newPost" class="card__newPost" id="" placeholder="Quoi de neuf ?" cols="30"
-                rows="10"></textarea>
-            <div class="btn">
-                <input style="display:none" ref="imgInput" type="file" @change="onFileSelected">
-                <button @click="$refs.imgInput.click()" name="ajoutPhoto" class="button">Ajouter une photo</button>
-                <!-- emoji  -->
-                <!-- gif -->
-                <button class="button" @click="addPost()">Envoyer</button>
-            </div>
-        </div>
-
-        <Post />
-
-    </section>
-
-</template>
 
 <style lang="scss" >
 @import "@/assets/sass/_variables.scss";

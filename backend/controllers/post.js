@@ -2,29 +2,28 @@ const DB = require('../database');
 // const Post = DB.Post;
 // const User = DB.User;
 const fs = require('fs');
+const { post } = require('../app');
 
 // Crée un post avec une image ou sans image
 exports.createPost = async (req, res, next) => {
-    const { user_id, message, imgUrl } = req.body;
-    // Il sera peut etre possible de mettre juste une image sans texte
-    if (!user_id ) {
+    const { user_id, message } = req.body;
+    console.log('req.body :', req.body);
+    console.log('req.file :', req.file);
+
+    if (!user_id) {
         return res.status(404).json({ message: 'Aucun message, data manquante. Un des parametres nest pas rempli' });
     }
-    console.log(req.body);
-    console.log(req.file);
+
     if (req.file) {
-        console.log('if req.file');
         imgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-        console.log(imgUrl);
     }
 
     try {
-        let post = await DB.Post.create(req.body);
-        console.log('try');
+        let post = await DB.Post.create({ user_id: user_id, message: message, imgUrl: imgUrl });
         return res.status(201).json({ message: 'Message crées avec succès !!', data: post })
 
     } catch (err) {
-        return res.status(500).json({ message: 'Database Error' })
+        return res.status(500).json({ message: 'Database Error'  })
     }
 };
 
@@ -89,7 +88,7 @@ exports.getOnePost = async (req, res, next) => {
 
 // Afficher tous les posts sur le forum
 exports.getAllPost = (req, res, next) => {
-    DB.Post.findAll({ include: [{ model: DB.User, attributes: ['id', 'pseudo', 'email'] }, { model: DB.Comments, include: {model: DB.User, attributes: ['id', 'pseudo', 'email']} }] })
+    DB.Post.findAll({ include: [{ model: DB.User, attributes: ['id', 'pseudo', 'email'] }, { model: DB.Comments, include: { model: DB.User, attributes: ['id', 'pseudo', 'email'] } }] })
         .then(post => res.json({ data: post }))
         .catch(err => res.status(500).json({ message: 'Database Error' }));
 };

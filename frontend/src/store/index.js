@@ -15,7 +15,7 @@ if (!user) {
 } else {
     try {
         user = JSON.parse(user);
-        console.log(user.userId);
+        console.log(user.user_id);
         instance.defaults.headers.common['Authorization'] = user.token;
     } catch (ex) {
         user = {
@@ -69,7 +69,6 @@ const store = createStore({
                 instance.post('/auth/login', userInfos)
                     .then(res => {
                         // A retirer cle token dans la console
-                        console.log(res.data.access_token);
                         console.log(res.data);
                         commit('setStatus', '');
                         commit('logUser', res.data);
@@ -81,15 +80,6 @@ const store = createStore({
                     });
             });
         },
-        getAllPostUser: ({ commit }) => {
-            commit;
-            return instance.get('/post')
-                .then(res => {
-                    console.log(res.data);
-                    res.data
-                })
-                .catch(e => console.error(e));
-        }
     }
 });
 

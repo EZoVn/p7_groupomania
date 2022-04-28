@@ -9,7 +9,8 @@ exports.createComments = async (req, res, next) => {
     }
 
     try {
-        console.log(req.body);
+        console.log('req.body:', req.body);
+        console.log('req.params:', req.params);
         let comment = await DB.Comments.create(req.body);
         return res.status(201).json({ Message: 'Commentaire envoyer avec succès', data: comment });
     } catch (err) {
