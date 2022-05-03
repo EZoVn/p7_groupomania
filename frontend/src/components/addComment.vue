@@ -1,36 +1,48 @@
 <template>
     <div class="card">
-        <p>test</p>
-        <textarea name="newPost" class="card__newPost" placeholder="Ajouter un commentaire " cols="30"
-            rows="10"></textarea>
+        <input type="text" @input="commentaire = $event.target.value" name="newPost" class="card__newPost" id="key"
+            placeholder="Ajouter un commentaire ">
+        <!-- <textarea @input="commentaire = $event.target.value" name="newPost" class="card__newPost" id="key"
+        placeholder="Ajouter un commentaire " cols="30" rows="10"></textarea> -->
         <div class="btn">
 
-            <button class="button">Envoyer</button>
+
+            <button @click="addComment(commentaire, postId)" class="button btnDelete">Envoyer</button>
         </div>
     </div>
 </template>
 
 <script>
+import { ref } from 'vue';
+import axios from 'axios';
+
+const instance = axios.create({
+    baseURL: 'http://localhost:8080',
+});
+let locale = localStorage.getItem('user');
+let user = JSON.parse(locale);
 
 export default {
-    name: 'addComment',
+    name: 'AddComment',
     props: {
-        // post: { type: Object }
-        postId: { type: Number }
+        postId: { type: Number },
+        getAllPost: { type: Function },
     },
     data() {
         return {
-            // posts: ref([]),
             commentaire: ref(""),
         };
     },
     methods: {
-        newComment(comment, postId) {
+        addComment(comment, postId) {
             console.log(postId);
             console.log(this.commentaire);
-            console.log(comment);
-        }
+            instance.put(`/comments/${[postId]}/${user.user_id}`, { user_id: user.user_id, comment: comment, post_id: postId })
+                .then(res => {
+                    this.getAllPost()
+                    console.log(res)
+                })
+        },
     },
-
 }
 </script>

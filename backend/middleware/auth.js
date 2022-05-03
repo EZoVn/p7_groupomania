@@ -13,12 +13,12 @@ const extractBearer = authorization => {
 }
 
 module.exports = (req, res, next) => {
-    console.log(req.headers.authorization);
+    console.log('req.headers.authorization : ',req.headers.authorization);
     const token = req.headers.authorization && extractBearer(req.headers.authorization);
-    console.log(req.body);
+    console.log('req.body : ',req.body);
     const user_id = req.body.user_id;
-    console.log(user_id);
-    console.log(token);
+    console.log('User_id : ',user_id);
+    console.log('Token : ',token);
     if (!token) {
         return res.status(401).json({ message: 'Le token n est pas bon' });
     }
@@ -32,7 +32,7 @@ module.exports = (req, res, next) => {
     // })
     try {
         const verif = jwt.verify(token, process.env.TOKEN);
-        console.log(verif);
+        console.log('verif_jwt : ',verif);
         // console.log('id body:', req.body.user_id);
         console.log('id token :', verif.id);
         // let user_id = parseInt(req.body.user_id)

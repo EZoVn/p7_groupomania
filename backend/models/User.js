@@ -12,7 +12,7 @@ module.exports = (sequelize) => {
         pseudo: { type: DataTypes.STRING(90), defaultValue: '', allowNull: false },
         email: { type: DataTypes.STRING, unique: true, validate: { isEmail: true } },
         password: { type: DataTypes.STRING(128), is: /^[0-9a-f]{64$}/i },
-        imgUser:{type: DataTypes.STRING, defaultValue: 'http://localhost:8080/images/photoProfilBase.jpg'},
+        imgUser:{type: DataTypes.STRING, defaultValue: 'http://localhost:8080/images/imgProfilDefault/photoProfilBase.jpg'},
         descriptionUser: {type: DataTypes.STRING(255),defaultValue: '', allowNull: false}
     });
 

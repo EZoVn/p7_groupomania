@@ -5,6 +5,7 @@
       <p class="card__title">{{ post.User.pseudo }}</p>
 
       <button @click="deletePost(post.id)" class="button btnDelete">Supprimer le post</button>
+      
       <!-- <button @click="modifyPost(post.id)" class="button btnDelete">Modifier</button> -->
 
     </div>
@@ -15,61 +16,44 @@
       </p>
       <img v-show="post.imgUrl != null" class="card__img" :src="post.imgUrl" alt="description image" />
     </div>
-    <Comment :post="post" />
+    <Comment :post="post" :getAllPost="getAllPost" />
 
-    <div class="card">
-      <input type="text" @input="commentaire = $event.target.value" name="newPost" class="card__newPost" id="key"
-        placeholder="Ajouter un commentaire ">
-      <!-- <textarea @input="commentaire = $event.target.value" name="newPost" class="card__newPost" id="key"
-        placeholder="Ajouter un commentaire " cols="30" rows="10"></textarea> -->
-      <div class="btn">
+    <AddComment :postId="post.id" :getAllPost="getAllPost" />
 
-
-        <button @click="addComment(commentaire, post.id)" class="button btnDelete">Envoyer</button>
-      </div>
-    </div>
   </div>
 </template>
 
 <script >
-import { ref } from 'vue';
 import axios from 'axios';
 import Comment from './Comment.vue';
+import AddComment from './AddComment.vue';
 
-const instance = axios.create({
-  baseURL: 'http://localhost:8080',
-});
-let locale = localStorage.getItem('user');
-let user = JSON.parse(locale);
 
 export default {
   name: 'Post',
   components: {
     Comment,
+    AddComment
   },
   props: {
     posts: { type: Array },
+    getAllPost: { type: Function }
   },
   data() {
     return {
-      commentaire: ref(""),
-    };
+
+    }
   },
   methods: {
     deletePost(postId) {
       console.log("Le post :", postId, "a été supprimer avec succès !");
-      axios.delete(`http://localhost:8080/post/${postId}`);
+      axios.delete(`http://localhost:8080/post/${postId}`)
+        .then(() => this.getAllPost())
     },
     // modifyPost(postId) {
     //   console.log('Le post va etre modifier');
     //   axios.patch(`http://localhost:8080/post/${postId}`, )
     // },
-    addComment(comment, postId) {
-      console.log(postId);
-      console.log(this.commentaire);
-      instance.put(`/comments/${[postId]}/${user.user_id}`, { user_id: user.user_id, comment: comment, post_id: postId }).then(res => console.log(res))
-    },
-
   },
 }
 </script>

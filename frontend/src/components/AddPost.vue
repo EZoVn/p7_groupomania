@@ -20,7 +20,7 @@ const instance = axios.create({
 });
 let locale = localStorage.getItem('user');
 let user = JSON.parse(locale);
-console.log(user.user_id);
+// console.log(user.user_id);
 
 export default {
     name: "AddPost",

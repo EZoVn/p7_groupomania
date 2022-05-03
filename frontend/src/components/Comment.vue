@@ -36,20 +36,23 @@ let user = JSON.parse(locale);
 export default {
     name: 'Comment',
     props: {
-        post: { type: Object }
+        post: { type: Object },
+        getAllPost: { type: Function }
     },
     methods: {
         deleteComment(commentId, user_id) {
-            console.log(commentId);
-            console.log(user.access_token);
             let config = {
                 headers: {
                     'Authorization': 'Bearer ' + user.access_token
                 },
                 data: { user_id: user_id }
             };
-            axios.delete(`http://localhost:8080/comments/${commentId}`, config);
-            console.log("Le commentaire :", commentId, "a été supprimer avec succès !");
+            axios.delete(`http://localhost:8080/comments/${commentId}`, config)
+                .then(() => {
+                    this.getAllPost();
+                    console.log("Le commentaire :", commentId, "a été supprimer avec succès !");
+                })
+                .catch(e => console.log(`Le commentaire n'a pas été supprimé`, e))
         },
     }
 }

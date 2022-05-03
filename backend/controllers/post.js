@@ -14,18 +14,18 @@ exports.createPost = async (req, res, next) => {
     }
 
     try {
-    if (req.file) {
-        imgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-        
-        let post = await DB.Post.create({ user_id: user_id, message: message, imgUrl: imgUrl });
-        return res.status(201).json({ message: 'Message crées avec succès !!', data: post })
-    } 
-    console.log(req.file);
-    if(!req.file) {
-        console.log('interdit');
-        let post = await DB.Post.create({ user_id: user_id, message: message });
-        return res.status(201).json({ message: 'Message sans image crées avec succès !!', data: post })
-    }
+        if (req.file) {
+            imgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+
+            let post = await DB.Post.create({ user_id: user_id, message: message, imgUrl: imgUrl });
+            return res.status(201).json({ message: 'Message crées avec succès !!', data: post })
+        }
+        console.log(req.file);
+        if (!req.file) {
+            console.log('interdit');
+            let post = await DB.Post.create({ user_id: user_id, message: message });
+            return res.status(201).json({ message: 'Message sans image crées avec succès !!', data: post })
+        }
 
     } catch (err) {
         return res.status(500).json({ message: 'Database Error' })
@@ -56,18 +56,21 @@ exports.deletePost = async (req, res, next) => {
     }
     // supprimer le fichier sil existe
 
-
-    const post = await DB.Post.findOne({where: {id:postId}})
-
-    const filename = post.dataValues.imgUrl.split('/images/')[1];
-
-    console.log(filename, ':file');
-    await fs.unlink(`./images/${filename}`, () => {
-
-         DB.Post.destroy({ where: { id: postId }, force: true })
+    const post = await DB.Post.findOne({ where: { id: postId } })
+    const file = post.dataValues.imgUrl;
+    
+    if (file) {
+        const filename = file.split('/images/')[1];
+        await fs.unlink(`./images/${filename}`, () => {
+            DB.Post.destroy({ where: { id: postId }, force: true })
+            return res.status(200).json({ message: 'Message supprimé avec succès !' })
+        });
+    } else {
+        DB.Post.destroy({ where: { id: postId }, force: true })
         return res.status(200).json({ message: 'Message supprimé avec succès !' })
+    }
 
-    });
+
 };
 
 // Afficher tous les posts d'un utilisateur non terminé !!!!

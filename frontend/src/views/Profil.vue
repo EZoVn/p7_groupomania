@@ -2,31 +2,36 @@
   <div>
 
     <div class="card card__profil">
+      {{ user.id }}
       <p class="card__profil--pseudo">{{ user.pseudo }}</p>
-      <p class="card__profil--description">Email : {{user.email}}</p>
+      <p class="card__profil--description">Email : {{ user.email }}</p>
       <img class="card__profil--img" :src="user.imgUser" alt="Photo de profil" />
     </div>
     <div class="card">
       <p class="card__profil--description">Courte description de l'utilisateur : {{ user.descriptionUser }}</p>
     </div>
-      <button class="button btnDelete">Modifier le profil</button>
-      <button @click="deleteAccount()" class="button btnDelete">Supprimer le profil</button>
-      
+    <button class="button btnDelete">Modifier le profil</button>
+    <button @click="deleteAccount(user.id)" class="button btnDelete">Supprimer le profil</button>
+
     <!-- <Post  /> -->
-    <Post :posts="postsUser" />
+    <Post :posts="postsUser" :getAllPost="getAllPostUser" />
   </div>
 
 </template>
 
 
 <script >
-import { ref } from "vue";
 import axios from 'axios';
 import Post from "../components/Post.vue";
 
 let locale = localStorage.getItem('user');
 let localeUser = JSON.parse(locale);
-
+let config = {
+  headers: {
+    'Authorization': 'Bearer ' + localeUser.access_token
+  },
+  data: { user_id: localeUser.user_id }
+};
 export default {
   name: 'Profil',
   components: {
@@ -51,15 +56,19 @@ export default {
       axios.get(`http://localhost:8080/users/${localeUser.user_id}`)
         .then(res => {
           this.user = res.data.data;
-          console.log(this.user);
+          console.log('this.user : ', this.user);
         });
     },
-    deleteAccount(){
-      axios.delete(`http://localhost:8080/users/${localeUser.user_id}`)
-        .then(res => console.log(`Le compte de ${user.pseudo} a été supprimer !`,res))
-    },
-  },
+    deleteAccount(userId) {
+      axios.delete(`http://localhost:8080/users/${userId}`, config)
+        .then(() => {
+          this.$store.commit('logout');
+          this.$router.push('/login');
+          console.log(`Le compte ${userId} a été supprimer !`)
+        })
 
+    },
+  }
 }
 
 </script>

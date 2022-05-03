@@ -1,7 +1,7 @@
 <template>
     <section>
-        <AddPost :getAllPost="getAllPost"/>
-        <Post :posts="posts" />
+        <AddPost :getAllPost="getAllPost" />
+        <Post :posts="posts" :getAllPost="getAllPost" />
 
     </section>
 
@@ -26,21 +26,10 @@ export default {
     created() {
         this.getAllPost();
     },
-    watch: {
-        posts() {
-            // this.getAllPost();
-            // console.log('newVal:');
-
-        }
-    },
     methods: {
         getAllPost() {
             axios.get("http://localhost:8080/post/")
-                .then(res => {
-                    console.log(res);
-                    this.posts = res.data.data
-                    console.log(this.posts);
-                });
+                .then(res => this.posts = res.data.data);
         },
     }
 }

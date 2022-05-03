@@ -4,9 +4,9 @@ import { RouterLink, RouterView } from 'vue-router'
 export default {
   name: 'App',
   methods:{
-    logout: function() {
+    logout() {
       this.$store.commit('logout'),
-      this.$router.push('/')
+      this.$router.push('/login')
     }
   }
 }
@@ -27,11 +27,11 @@ export default {
 
       <nav>
 
-        <RouterLink to="/">Log </RouterLink>
+        <RouterLink to="/login">Log </RouterLink>
         <span> // </span>
         <RouterLink to="/post">Tous les posts </RouterLink>
         <span> // </span>
-        <RouterLink to="/profil">Profil </RouterLink>
+        <RouterLink  to="/profil">Profil </RouterLink>
 
       </nav>
     </div>
