@@ -8,7 +8,7 @@ const router = express.Router();
 router.put('/:post_id/:user_id', commentsCtrl.createComments);
 router.get('/post/:post_id', commentsCtrl.getAllCommentsPost);
 router.get('/:id', commentsCtrl.getOneComment);
-router.delete('/:id', commentsCtrl.deleteComment);
+router.delete('/:id',authCheck, commentsCtrl.deleteComment);
 router.patch('/:id',authCheck, commentsCtrl.modifyComment);
 
 module.exports = router;

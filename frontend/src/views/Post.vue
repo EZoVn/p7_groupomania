@@ -1,66 +1,47 @@
 <template>
     <section>
-
-        <div class="card">
-            <textarea v-model="post" name="newPost" class="card__newPost" id="" placeholder="Quoi de neuf ?" cols="30"
-                rows="10"></textarea>
-            <div class="btn">
-                <input style="display:none" ref="imgInput" type="file" @change="onFileSelected">
-                <button @click="$refs.imgInput.click()" name="ajoutPhoto" class="button">Ajouter une photo</button>
-                <!-- emoji  -->
-                <!-- gif -->
-                <button class="button" @click="addPost()">Envoyer</button>
-            </div>
-        </div>
-
-        <Post />
+        <AddPost :getAllPost="getAllPost"/>
+        <Post :posts="posts" />
 
     </section>
 
 </template>
 
 <script >
+import axios from 'axios';
+import AddPost from "../components/AddPost.vue";
 import Post from "../components/Post.vue";
-import axios from 'axios'
 
-const instance = axios.create({
-    baseURL: 'http://localhost:8080',
-});
-let locale = localStorage.getItem('user');
-let user = JSON.parse(locale);
-console.log(user.user_id);
 export default {
-    name: Post,
+    // name: Post,
     components: {
         Post,
+        AddPost,
     },
     data() {
         return {
-            post: '',
-            image: null,
+            posts: [],
         }
     },
+    created() {
+        this.getAllPost();
+    },
+    watch: {
+        posts() {
+            // this.getAllPost();
+            // console.log('newVal:');
 
+        }
+    },
     methods: {
-        onFileSelected(event) {
-            this.image = event.target.files[0]
-            console.log(this.image);
+        getAllPost() {
+            axios.get("http://localhost:8080/post/")
+                .then(res => {
+                    console.log(res);
+                    this.posts = res.data.data
+                    console.log(this.posts);
+                });
         },
-        // Comment envoyer l'image erreur 500 renvoyer
-        async addPost() {
-            const formData = new FormData();
-           formData.append('message', this.post);
-           formData.append('user_id', user.user_id);
-           formData.append('file', this.image);
-            console.log(formData);
-            // await instance.put('/post', {imgUrl:formData, message: this.post, user_id: user.user_id })
-            await instance.put('/post',formData)
-            .then(res => {
-                console.log(res);
-
-            })
-        },
-
     }
 }
 </script>
@@ -83,16 +64,6 @@ export default {
     margin: 0 20px;
 }
 
-.card {
-
-    &__newPost {
-        margin-bottom: 10px;
-        height: 100px;
-        width: 100%;
-        padding: 10px;
-        border-radius: 16px;
-    }
-}
 
 .button {
     background-color: $red;

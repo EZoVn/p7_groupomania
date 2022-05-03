@@ -11,7 +11,9 @@ module.exports = (sequelize) => {
         id: { type: DataTypes.INTEGER(11), primaryKey: true, autoIncrement: true, },
         pseudo: { type: DataTypes.STRING(90), defaultValue: '', allowNull: false },
         email: { type: DataTypes.STRING, unique: true, validate: { isEmail: true } },
-        password: { type: DataTypes.STRING(128), is: /^[0-9a-f]{64$}/i }
+        password: { type: DataTypes.STRING(128), is: /^[0-9a-f]{64$}/i },
+        imgUser:{type: DataTypes.STRING, defaultValue: 'http://localhost:8080/images/photoProfilBase.jpg'},
+        descriptionUser: {type: DataTypes.STRING(255),defaultValue: '', allowNull: false}
     });
 
     User.checkPassword = async (password, originel) => {

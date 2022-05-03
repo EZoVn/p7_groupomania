@@ -60,7 +60,7 @@ export default {
 }
 </script>
 
-<template>
+<template> 
   <div class="card">
     <h1 v-if="mode == 'login'" class="card__title">Connexion</h1>
     <h1 v-else class="card__title">Inscription</h1>

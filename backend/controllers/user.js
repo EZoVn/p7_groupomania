@@ -1,3 +1,4 @@
+const { all } = require('../app');
 const DB = require('../database');
 
 const User = DB.User;
@@ -20,7 +21,7 @@ exports.oneUser = (req, res) => {
         return res.status(400).json({ message: `Manque l'id` })
     }
 
-    User.findOne({ where: { id: userId },attributes: ['id','pseudo','email'], raw: true })
+    User.findOne({ where: { id: userId }, attributes: ['id', 'pseudo', 'email', 'imgUser', 'descriptionUser'], raw: true })
         .then(user => {
             if ((user === null)) {
                 return res.status(404).json({ message: 'User introuvable' })
@@ -71,7 +72,7 @@ exports.modifyAccount = async (req, res) => {
 
     try {
         let user = await User.findOne({ where: { id: userId }, raw: true });
-        console.log('modify let user: ',user);
+        console.log('modify let user: ', user);
         if (user === null) {
             return res.status(404).json({ message: 'Utilisateur inéxistant !' })
         }

@@ -18,7 +18,7 @@ export default {
 <template>
 
   <main>
-    <img alt="Groupomania logo" class="logo" src="@/assets/images/icon-left-font-monochrome-white.png" width="125"
+    <img alt="Groupomania logo" class="logo" src="@/assets/images/logo-revisite.png" width="125"
       height="125" />
 
     <div class="wrapper">
@@ -56,9 +56,11 @@ export default {
   // montserrat pour les textes
   // font-family: 'montserrat', sans-serif;
 }
-
+textarea{
+  resize: none;
+}
 body {
-  background-image: linear-gradient(57deg, $blue 0%, $grey 100%);
+  background-image: linear-gradient(57deg, $blue 0%, $grey 150%);
   display: flex;
 
   min-height: 100vh;
@@ -75,8 +77,8 @@ body {
 }
 
 .logo {
-  width: 200px;
-  height: 200px;
+  width: 600px;
+  height: 120px;
 }
 .deconnexion{
   display: none;
