@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const DB = require('../database');
 
 const extractBearer = authorization => {
     if (typeof authorization !== 'string') {
@@ -13,42 +14,56 @@ const extractBearer = authorization => {
 }
 
 module.exports = (req, res, next) => {
-    console.log('req.headers.authorization : ',req.headers.authorization);
+    console.log('req.headers.authorization : ', req.headers.authorization);
     const token = req.headers.authorization && extractBearer(req.headers.authorization);
-    console.log('req.body : ',req.body);
-    const user_id = req.body.user_id;
-    console.log('User_id : ',user_id);
-    console.log('Token : ',token);
-    if (!token) {
-        return res.status(401).json({ message: 'Le token n est pas bon' });
-    }
-    // Vérifier la validité du token
-    // jwt.verify(token, process.env.TOKEN, (err, decodedToken) => {
-    //     if(err){
-    //         return res.status(401).json({message: 'Bad token'})
+    console.log('req.body : ', req.body);
+    // const user_id = req.body.user_id;
+    // console.log('User_id : ', user_id);
+    console.log('Token : ', token);
+
+
+    const verif = jwt.verify(token, process.env.TOKEN);
+    // console.log('verif', verif);
+    let userId = parseInt(verif.id)
+    console.log('userId', userId);
+    DB.User.findOne({ where: { id: userId } })
+        .then(user => {
+            if (!user) {
+                return res.status(401).json({
+                    message: 'requête non autorisée'
+                })
+            } else {
+                req.body.user_id = user.id
+                console.log(req.body.user_id);
+                console.log('req.user.id', user.id);
+                console.log('fin des log auth');
+                next();
+            }
+        })
+
+
+    // if (!token) {
+    //     return res.status(401).json({ message: 'Le token n est pas bon' });
+    // }
+    // try {
+    //     const verif = jwt.verify(token, process.env.TOKEN);
+    //     console.log('verif_jwt : ',verif);
+    //     // console.log('id body:', req.body.user_id);
+    //     console.log('id token :', verif.id);
+    //     // let user_id = parseInt(req.body.user_id)
+    //     let userId = parseInt(verif.id)
+    //     if (user_id && user_id !== userId) {
+    //         // if (req.body.id !== verif.id) {
+
+    //         console.log('bad params');
+    //         throw 'User ID non valable !';
     //     }
 
-    //     next()
-    // })
-    try {
-        const verif = jwt.verify(token, process.env.TOKEN);
-        console.log('verif_jwt : ',verif);
-        // console.log('id body:', req.body.user_id);
-        console.log('id token :', verif.id);
-        // let user_id = parseInt(req.body.user_id)
-        let userId = parseInt(verif.id)
-        if (user_id && user_id !== userId) {
-            // if (req.body.id !== verif.id) {
+    //     console.log('next');
+    //     next();
+    // } catch (err) {
+    //     res.status(401).json({ error: err, message: "Requête non authentifiée !" });
 
-            console.log('bad params');
-            throw 'User ID non valable !';
-        }
-
-        console.log('next');
-        next();
-    } catch (err) {
-        res.status(401).json({ error: err, message: "Requête non authentifiée !" });
-
-    }
+    // }
 
 };

@@ -52,7 +52,7 @@ const store = createStore({
             commit('setStatus', 'loading');
             return new Promise((resolve, reject) => {
                 commit;
-                instance.put('/users/signup', userInfos)
+                instance.post('/users/signup', userInfos)
                     .then(res => {
                         commit('setStatus', 'created');
                         resolve(res)

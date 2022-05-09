@@ -15,11 +15,14 @@
 <script>
 import axios from 'axios'
 
-const instance = axios.create({
-    baseURL: 'http://localhost:8080',
-});
 let locale = localStorage.getItem('user');
 let user = JSON.parse(locale);
+
+const instance = axios.create({
+    baseURL: 'http://localhost:8080',
+    headers: { 'Authorization': `Bearer ${user.access_token}` },
+});
+
 // console.log(user.user_id);
 
 export default {
@@ -43,7 +46,7 @@ export default {
             formData.append('message', this.post);
             formData.append('user_id', user.user_id);
             formData.append('file', this.image);
-            await instance.put('/post', formData)
+            await instance.post('/post', formData)
                 .then(res => {
                     console.log(res);
                     this.image = null;

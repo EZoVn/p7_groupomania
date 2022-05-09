@@ -6,7 +6,7 @@ export default {
   methods:{
     logout() {
       this.$store.commit('logout'),
-      this.$router.push('/login')
+      this.$router.push('/')
     }
   }
 }
@@ -27,7 +27,7 @@ export default {
 
       <nav>
 
-        <RouterLink to="/login">Log </RouterLink>
+        <RouterLink to="/">Log </RouterLink>
         <span> // </span>
         <RouterLink to="/post">Tous les posts </RouterLink>
         <span> // </span>

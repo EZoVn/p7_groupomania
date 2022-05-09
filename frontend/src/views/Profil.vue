@@ -49,11 +49,11 @@ export default {
   },
   methods: {
     getAllPostUser() {
-      axios.get(`http://localhost:8080/post/postUser/${localeUser.user_id}`)
+      axios.get(`http://localhost:8080/post/postUser/${localeUser.user_id}`, { headers: { 'Authorization': 'Bearer ' + localeUser.access_token } })
         .then(res => this.postsUser = res.data.data);
     },
     getOneUser() {
-      axios.get(`http://localhost:8080/users/${localeUser.user_id}`)
+      axios.get(`http://localhost:8080/users/${localeUser.user_id}`, { headers: { 'Authorization': 'Bearer ' + localeUser.access_token } })
         .then(res => {
           this.user = res.data.data;
           console.log('this.user : ', this.user);
@@ -63,7 +63,7 @@ export default {
       axios.delete(`http://localhost:8080/users/${userId}`, config)
         .then(() => {
           this.$store.commit('logout');
-          this.$router.push('/login');
+          this.$router.push('/');
           console.log(`Le compte ${userId} a été supprimer !`)
         })
 

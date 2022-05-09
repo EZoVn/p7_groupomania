@@ -5,7 +5,7 @@
       <p class="card__title">{{ post.User.pseudo }}</p>
 
       <button @click="deletePost(post.id)" class="button btnDelete">Supprimer le post</button>
-      
+
       <!-- <button @click="modifyPost(post.id)" class="button btnDelete">Modifier</button> -->
 
     </div>
@@ -28,6 +28,8 @@ import axios from 'axios';
 import Comment from './Comment.vue';
 import AddComment from './AddComment.vue';
 
+let locale = localStorage.getItem('user');
+let user = JSON.parse(locale);
 
 export default {
   name: 'Post',
@@ -46,13 +48,15 @@ export default {
   },
   methods: {
     deletePost(postId) {
-      console.log("Le post :", postId, "a été supprimer avec succès !");
-      axios.delete(`http://localhost:8080/post/${postId}`)
-        .then(() => this.getAllPost())
+      axios.delete(`http://localhost:8080/post/${postId}`, { headers: { 'Authorization': `Bearer ${user.access_token}` } })
+        .then(() => {
+          console.log("Le post :", postId, "a été supprimer avec succès !");
+          this.getAllPost()
+        })
     },
     // modifyPost(postId) {
     //   console.log('Le post va etre modifier');
-    //   axios.patch(`http://localhost:8080/post/${postId}`, )
+    //   axios.put(`http://localhost:8080/post/${postId}`, )
     // },
   },
 }

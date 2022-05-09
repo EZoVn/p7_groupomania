@@ -12,6 +12,9 @@ import axios from 'axios';
 import AddPost from "../components/AddPost.vue";
 import Post from "../components/Post.vue";
 
+let locale = localStorage.getItem('user');
+let user = JSON.parse(locale);
+
 export default {
     // name: Post,
     components: {
@@ -28,7 +31,7 @@ export default {
     },
     methods: {
         getAllPost() {
-            axios.get("http://localhost:8080/post/")
+            axios.get("http://localhost:8080/post/", {headers: {'Authorization': 'Bearer ' + user.access_token}})
                 .then(res => this.posts = res.data.data);
         },
     }

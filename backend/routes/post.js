@@ -21,14 +21,12 @@ router.use((req, res, next) => {
  * supprimer un post 
  * modifier un post 
  */
-router.get('/', postCtrl.getAllPost);
-router.get('/:id', postCtrl.getOnePost);
-router.get('/postUser/:user_id', postCtrl.getAllPostUser);
-// router.put('/', authCheck, multer, postCtrl.createPost);
-// router.delete('/:id', authCheck, multer, postCtrl.deletePost);
-// router.patch('/:id', authCheck, multer, postCtrl.modifyPost);
-router.put('/', multer, postCtrl.createPost);
-router.delete('/:id', multer, postCtrl.deletePost);
-router.patch('/:id', multer, postCtrl.modifyPost);
+
+router.get('/',authCheck, postCtrl.getAllPost);
+router.get('/:id',authCheck, postCtrl.getOnePost);
+router.get('/postUser/:user_id',authCheck, postCtrl.getAllPostUser);
+router.post('/', authCheck, multer, postCtrl.createPost);
+router.delete('/:id', authCheck, multer, postCtrl.deletePost);
+router.put('/:id', authCheck, multer, postCtrl.modifyPost);
 
 module.exports = router;

@@ -20,7 +20,6 @@ exports.createPost = async (req, res, next) => {
             let post = await DB.Post.create({ user_id: user_id, message: message, imgUrl: imgUrl });
             return res.status(201).json({ message: 'Message crées avec succès !!', data: post })
         }
-        console.log(req.file);
         if (!req.file) {
             console.log('interdit');
             let post = await DB.Post.create({ user_id: user_id, message: message });
@@ -40,8 +39,15 @@ exports.modifyPost = async (req, res, next) => {
         if (post === null) {
             return res.status(404).json({ message: `Le message ${postId} est inexistant !` })
         }
-        await Post.update(req.body, { where: { id: postId } });
-        return res.status(200).json({ message: 'Message modifié avec succès !!' })
+        const user_id = req.body.user_id
+        console.log('user_id', user_id);
+        if (post.user_id === user_id) {
+
+            await Post.update(req.body, { where: { id: postId } });
+            return res.status(200).json({ message: 'Message modifié avec succès !!' })
+        } else {
+            return res.status(403).json({ message: 'Non authentifié' });
+        }
 
     } catch (err) {
         return res.status(500).json({ message: 'Database Error' })
@@ -54,20 +60,28 @@ exports.deletePost = async (req, res, next) => {
     if (!postId) {
         return res.status(404).json({ message: `ID non connu` })
     }
-    // supprimer le fichier sil existe
+
+    const user_id = req.body.user_id
+    console.log('user_id', user_id);
 
     const post = await DB.Post.findOne({ where: { id: postId } })
-    const file = post.dataValues.imgUrl;
-    
-    if (file) {
-        const filename = file.split('/images/')[1];
-        await fs.unlink(`./images/${filename}`, () => {
+    console.log(post.user_id);
+
+    if (post.user_id === user_id) {
+
+        const file = post.dataValues.imgUrl;
+        if (file) {
+            const filename = file.split('/images/')[1];
+            await fs.unlink(`./images/${filename}`, () => {
+                DB.Post.destroy({ where: { id: postId }, force: true })
+                return res.status(200).json({ message: 'Message supprimé avec succès !' })
+            });
+        } else {
             DB.Post.destroy({ where: { id: postId }, force: true })
             return res.status(200).json({ message: 'Message supprimé avec succès !' })
-        });
+        }
     } else {
-        DB.Post.destroy({ where: { id: postId }, force: true })
-        return res.status(200).json({ message: 'Message supprimé avec succès !' })
+        return res.status(403).json({ message: 'Non authentifié' });
     }
 
 
