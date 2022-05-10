@@ -6,27 +6,28 @@
         <p v-if="post.Comments == ''"> Aucun commentaire ..</p>
         <div v-for="comment in post.Comments" :key="comment.id" class="card__comment">
             <div class="card__comment--info">
-                {{ comment.User.id }}
                 <div class="card__comment--user">
-                    <!-- <p>log comment : {{ comment }}</p> -->
-                    <!-- {{comment.id}} -->
+                    {{ comment.User.id }}
                     <img class="card__profil--img" :src="comment.User.imgUser" alt="">
                     <p>{{ comment.User.pseudo }}</p>
                     <!-- <p>user_id : {{ comment.user_id }}</p> -->
                 </div>
-                <button @click="deleteComment(comment.id)" class="button btnDelete">Supprimer</button>
+                <div>
+                    <button @click="deleteComment(comment.id)" class="button btnDelete">Supprimer</button>
+                    <button @click="switchModify()" class="button btnDelete">Modifier</button>
+                </div>
             </div>
 
             <!-- Juste a titre informatif a retirer par la suite -->
             <p>post_id : {{ comment.post_id }}</p>
             <p>msg : {{ comment.comment }}</p>
 
-            <!-- Trouver une solution afin de pouvoir modifier uniquement le commentaire selectionner affiche pour tous les com du post-->
-            <button @click="switchModify()" class="button btnDelete">Modifier</button>
-            <input v-if="mode == 'modify'" type="text" @input="commentaire = $event.target.value" name="newPost"
+            <!-- Trouver une solution afin d'afficher le input du commentaire uniquement-->
+            <input :class="{ mode: isActive }" type="text" @input="commentaire = $event.target.value" name="newPost"
                 class="card__newPost" id="comment.id" placeholder="Modifier commentaire ">
-            <button v-if="mode == 'modify'" @click="modifyComment(commentaire, comment.id)"
-                class="button btnDelete">Appliquer la modification</button>
+            <button :class="{ mode: isActive }" @click="modifyComment(commentaire, comment.id)"
+                class="button btnDelete">Envoyer
+                le commentaire modifier</button>
 
 
         </div>
@@ -35,21 +36,13 @@
 
 <script>
 import { ref } from 'vue';
-import axios from 'axios';
-
-let locale = localStorage.getItem('user');
-let user = JSON.parse(locale);
-
-const instance = axios.create({
-    baseURL: 'http://localhost:8080',
-    headers: { 'Authorization': `Bearer ${user.access_token}` },
-});
+import  Axios  from "@/_services/caller.service";
 
 export default {
     name: 'Comment',
     data() {
         return {
-            mode: 'affichage',
+            isActive: true,
             commentaire: ref(''),
         }
     },
@@ -60,25 +53,21 @@ export default {
 
     methods: {
         switchModify() {
-            this.mode = 'modify';
+            if (this.isActive == false) return this.isActive = true;
+            if (this.isActive == true) return this.isActive = false;
         },
         modifyComment(comment, commentId) {
             console.log(commentId);
-            instance.put(`/comments/${commentId}`, { comment: comment })
+            Axios.put(`/comments/${commentId}`, { comment })
                 .then(() => {
                     this.getAllPost();
                     console.log("Le commentaire a bien été modifier !")
                 })
                 .catch(e => console.log("error", e))
-            this.mode = 'affichage';
+            this.mode = false;
         },
         deleteComment(commentId) {
-            let config = {
-                headers: {
-                    'Authorization': 'Bearer ' + user.access_token
-                },
-            };
-            axios.delete(`http://localhost:8080/comments/${commentId}`, config)
+            Axios.delete(`/comments/${commentId}`)
                 .then(() => {
                     this.getAllPost();
                     console.log("Le commentaire :", commentId, "a été supprimer avec succès !");
@@ -91,6 +80,10 @@ export default {
 
 <style lang="scss">
 @import "@/assets/sass/_variables.scss";
+
+.mode {
+    display: none;
+}
 
 .comment {
     margin-top: 25px;

@@ -28,15 +28,15 @@ export default {
     },
     data() {
         return {
-            commentaire: ref(""),
+            commentaire: "",
+            // commentaire: ref(""),
         };
     },
     methods: {
         addComment(comment, postId) {
             instance.post(`/comments/${[postId]}`, { comment })
-                .then(res => {
+                .then(() => {
                     this.getAllPost()
-                    console.log(res)
                 })
         },
     },

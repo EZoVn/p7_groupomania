@@ -5,7 +5,8 @@
       {{ user.id }}
       <p class="card__profil--pseudo">{{ user.pseudo }}</p>
       <p class="card__profil--description">Email : {{ user.email }}</p>
-      <img class="card__profil--img" :src="user.imgUser" alt="Photo de profil" />
+
+      <img class="card__profil--img" :src="user.imgUser" @click="" alt="Photo de profil" />
     </div>
     <div class="card">
       <p class="card__profil--description">Courte description de l'utilisateur : {{ user.descriptionUser }}</p>
@@ -13,7 +14,6 @@
     <button class="button btnDelete">Modifier le profil</button>
     <button @click="deleteAccount(user.id)" class="button btnDelete">Supprimer le profil</button>
 
-    <!-- <Post  /> -->
     <Post :posts="postsUser" :getAllPost="getAllPostUser" />
   </div>
 
@@ -21,17 +21,12 @@
 
 
 <script >
-import axios from 'axios';
+import Axios from "@/_services/caller.service";
 import Post from "../components/Post.vue";
 
 let locale = localStorage.getItem('user');
 let localeUser = JSON.parse(locale);
-let config = {
-  headers: {
-    'Authorization': 'Bearer ' + localeUser.access_token
-  },
-  data: { user_id: localeUser.user_id }
-};
+
 export default {
   name: 'Profil',
   components: {
@@ -49,24 +44,23 @@ export default {
   },
   methods: {
     getAllPostUser() {
-      axios.get(`http://localhost:8080/post/postUser/${localeUser.user_id}`, { headers: { 'Authorization': 'Bearer ' + localeUser.access_token } })
+      Axios.get(`/post/postUser/${localeUser.user_id}`)
         .then(res => this.postsUser = res.data.data);
     },
     getOneUser() {
-      axios.get(`http://localhost:8080/users/${localeUser.user_id}`, { headers: { 'Authorization': 'Bearer ' + localeUser.access_token } })
+      Axios.get(`/users/${localeUser.user_id}`)
         .then(res => {
           this.user = res.data.data;
           console.log('this.user : ', this.user);
         });
     },
     deleteAccount(userId) {
-      axios.delete(`http://localhost:8080/users/${userId}`, config)
+      Axios.delete(`/users/${userId}`, { user_id: userId })
         .then(() => {
           this.$store.commit('logout');
           this.$router.push('/');
           console.log(`Le compte ${userId} a été supprimer !`)
         })
-
     },
   }
 }

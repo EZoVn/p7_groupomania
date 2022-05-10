@@ -17,19 +17,29 @@
       <img v-show="post.imgUrl != null" class="card__img" :src="post.imgUrl" alt="description image" />
     </div>
     <Comment :post="post" :getAllPost="getAllPost" />
-
     <AddComment :postId="post.id" :getAllPost="getAllPost" />
+
+    <div>
+      <button @click="switchModify()" class="button btnDelete">Modifier le post</button>
+      <input :class="{ mode: isActive }" type="text" @input="modifyPost = $event.target.value" name="newPost"
+        class="card__newPost" id="comment.id" placeholder="Modifier post ">
+
+      <input style="display:none" ref="imgInputChange" type="file" @change="fileSelected">
+      <button @click="$refs.imgInputChange.click()" name="ajoutPhoto" class="button btnDelete">Ajouter une
+        photo</button>
+
+      <button :class="{ mode: isActive }" @click="modifyPost(modifyPost, post.id)" class="button btnDelete">Envoyer
+        le post modifier</button>
+    </div>
 
   </div>
 </template>
 
-<script >
-import axios from 'axios';
+<script>
+import { ref } from 'vue';
+import  Axios  from "@/_services/caller.service";
 import Comment from './Comment.vue';
 import AddComment from './AddComment.vue';
-
-let locale = localStorage.getItem('user');
-let user = JSON.parse(locale);
 
 export default {
   name: 'Post',
@@ -43,21 +53,42 @@ export default {
   },
   data() {
     return {
-
+      isActive: true,
+      post: ref(''),
+      newImage: null,
     }
   },
   methods: {
     deletePost(postId) {
-      axios.delete(`http://localhost:8080/post/${postId}`, { headers: { 'Authorization': `Bearer ${user.access_token}` } })
+      Axios.delete(`/post/${postId}`)
         .then(() => {
           console.log("Le post :", postId, "a été supprimer avec succès !");
           this.getAllPost()
         })
     },
-    // modifyPost(postId) {
-    //   console.log('Le post va etre modifier');
-    //   axios.put(`http://localhost:8080/post/${postId}`, )
-    // },
+
+    // Modification post en travaux
+    switchModify() {
+      if (this.isActive == false) return this.isActive = true;
+      if (this.isActive == true) return this.isActive = false;
+    },
+    fileSelected(event) {
+      this.newImage = event.target.files[0]
+      console.log(this.newImage);
+    },
+    modifyPostmodifyPost(modifyPost, postId) {
+      console.log('modify Post start ' + postId + modifyPost);
+      // const formData = new FormData();
+      // formData.append('message', this.post);
+      // formData.append('user_id', user.user_id);
+      // formData.append('file', this.image);
+      // instance.put(`/post/${postId}`, formData)
+      //   .then(res => {
+
+      //     console.log('Le post va etre modifier');
+      //     console.log(res)
+      //   })
+    },
   },
 }
 </script>
@@ -65,6 +96,10 @@ export default {
 
 <style lang="scss">
 @import "@/assets/sass/_variables.scss";
+
+.mode {
+  display: none;
+}
 
 .btnDelete {
   padding: 5px;

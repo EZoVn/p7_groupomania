@@ -13,17 +13,12 @@
 </template>
 
 <script>
-import axios from 'axios'
+
+import  Axios  from "@/_services/caller.service";
 
 let locale = localStorage.getItem('user');
 let user = JSON.parse(locale);
 
-const instance = axios.create({
-    baseURL: 'http://localhost:8080',
-    headers: { 'Authorization': `Bearer ${user.access_token}` },
-});
-
-// console.log(user.user_id);
 
 export default {
     name: "AddPost",
@@ -39,21 +34,20 @@ export default {
     methods: {
         onFileSelected(event) {
             this.image = event.target.files[0]
-            console.log(this.image);
         },
-        async addPost() {
+        addPost() {
             const formData = new FormData();
             formData.append('message', this.post);
             formData.append('user_id', user.user_id);
             formData.append('file', this.image);
-            await instance.post('/post', formData)
+            Axios.post('/post', formData)
                 .then(res => {
                     console.log(res);
                     this.image = null;
+                    this.post = '';
                     this.getAllPost();
                 })
         },
-
     }
 }
 </script>
