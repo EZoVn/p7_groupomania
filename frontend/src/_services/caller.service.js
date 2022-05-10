@@ -9,7 +9,6 @@ let locale = localStorage.getItem('user');
 let user = JSON.parse(locale);
 
 Axios.interceptors.request.use(request => {
-    console.log(request);
     let token = user.access_token;
     if (token) {
         request.headers.Authorization = 'Bearer ' + token;

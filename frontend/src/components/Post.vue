@@ -4,11 +4,24 @@
       <img class="card__profil--img" :src="post.User.imgUser" alt="Photo de profil" />
       <p class="card__title">{{ post.User.pseudo }}</p>
 
-      <button @click="deletePost(post.id)" class="button btnDelete">Supprimer le post</button>
 
-      <!-- <button @click="modifyPost(post.id)" class="button btnDelete">Modifier</button> -->
+      <div>
+        <button @click="deletePost(post.id)" class="button btnDelete">Supprimer le post</button>
+        <button @click="switchModify()" class="button btnDelete">Modifier le post</button>
+        <!-- <input v-model="modifyPost" :class="{ mode: isActive }" type="text"  name="newPost" -->
+        <input :class="{ mode: isActive }" type="text" @input="modifPost = $event.target.value" name="newPost"
+          class="card__newPost" id="comment.id" placeholder="Modifier post ">
 
+        <input ref="imgInputChange" type="file" @change="fileSelected" :class="{ mode: isActive }">
+        <!-- <input style="display:none" ref="imgInputChange" type="file" @change="fileSelected"> -->
+        <!-- <button @click="$refs.imgInputChange.click()" name="modifyPhoto" class="button btnDelete">Ajouter une
+          photo</button> -->
+
+        <button :class="{ mode: isActive }" @click="modifyPost(modifPost, post.id)" class="button btnDelete">Envoyer
+          le post modifier</button>
+      </div>
     </div>
+
 
     <div>
       <p class="card__text">
@@ -19,27 +32,17 @@
     <Comment :post="post" :getAllPost="getAllPost" />
     <AddComment :postId="post.id" :getAllPost="getAllPost" />
 
-    <div>
-      <button @click="switchModify()" class="button btnDelete">Modifier le post</button>
-      <input :class="{ mode: isActive }" type="text" @input="modifyPost = $event.target.value" name="newPost"
-        class="card__newPost" id="comment.id" placeholder="Modifier post ">
-
-      <input style="display:none" ref="imgInputChange" type="file" @change="fileSelected">
-      <button @click="$refs.imgInputChange.click()" name="ajoutPhoto" class="button btnDelete">Ajouter une
-        photo</button>
-
-      <button :class="{ mode: isActive }" @click="modifyPost(modifyPost, post.id)" class="button btnDelete">Envoyer
-        le post modifier</button>
-    </div>
 
   </div>
 </template>
 
 <script>
 import { ref } from 'vue';
-import  Axios  from "@/_services/caller.service";
+import Axios from "@/_services/caller.service";
 import Comment from './Comment.vue';
 import AddComment from './AddComment.vue';
+
+import { accountService } from "../_services/account.service"
 
 export default {
   name: 'Post',
@@ -56,6 +59,7 @@ export default {
       isActive: true,
       post: ref(''),
       newImage: null,
+      modifPost: '',
     }
   },
   methods: {
@@ -73,21 +77,21 @@ export default {
       if (this.isActive == true) return this.isActive = false;
     },
     fileSelected(event) {
+      console.log('test fileSelected');
       this.newImage = event.target.files[0]
       console.log(this.newImage);
     },
-    modifyPostmodifyPost(modifyPost, postId) {
-      console.log('modify Post start ' + postId + modifyPost);
-      // const formData = new FormData();
-      // formData.append('message', this.post);
-      // formData.append('user_id', user.user_id);
-      // formData.append('file', this.image);
-      // instance.put(`/post/${postId}`, formData)
-      //   .then(res => {
-
-      //     console.log('Le post va etre modifier');
-      //     console.log(res)
-      //   })
+    modifyPost(modifPost, postId) {
+      let user = accountService.getLocalStorage();
+      const formData = new FormData();
+      formData.append('message', this.modifPost);
+      formData.append('user_id', user.user_id);
+      formData.append('file', this.newImage);
+      Axios.put(`/post/${postId}`, formData)
+        .then(() => {
+          this.getAllPost();
+          console.log('Le post a été modifier avec succès !');
+        })
     },
   },
 }
