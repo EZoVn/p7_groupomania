@@ -9,16 +9,7 @@
 </template>
 
 <script>
-import { ref } from 'vue';
-import axios from 'axios';
-
-let locale = localStorage.getItem('user');
-let user = JSON.parse(locale);
-
-const instance = axios.create({
-    baseURL: 'http://localhost:8080',
-    headers: { 'Authorization': `Bearer ${user.access_token}` },
-});
+import Axios from "@/_services/caller.service";
 
 export default {
     name: 'AddComment',
@@ -29,12 +20,11 @@ export default {
     data() {
         return {
             commentaire: "",
-            // commentaire: ref(""),
         };
     },
     methods: {
         addComment(comment, postId) {
-            instance.post(`/comments/${[postId]}`, { comment })
+            Axios.post(`/comments/${[postId]}`, { comment })
                 .then(() => {
                     this.getAllPost()
                 })

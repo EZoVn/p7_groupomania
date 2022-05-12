@@ -1,109 +1,109 @@
 <template>
-  <div :key="post.id" v-for="post in posts" class="card">
-    <div class="card__profil">
-      <img class="card__profil--img" :src="post.User.imgUser" alt="Photo de profil" />
-      <p class="card__title">{{ post.User.pseudo }}</p>
+  <div>
+    <!-- <div  :key="post.id" v-for="post in posts" class="card"> -->
+    <div :key="index" v-for="(post, index) in posts" class="card">
+      <div class="card__profil">
+        <img class="card__profil--img" :src="post.User.imgUser" alt="Photo de profil" />
+        <p class="card__title">{{ post.User.pseudo }}</p>
 
+        <div>
+          <button @click="deletePost(post.id)" class="button btnDelete">Supprimer le post</button>
+          <button @click="switchModify(index)" class="button btnDelete">Modifier le post</button>
+
+          <div  v-show="isActive == index">
+            <input type="text" @input="modifPost = $event.target.value" name="newPost" class="card__newPost" id="comment.id" placeholder="Modifier post " />
+            <input ref="imgInputChange" type="file" @change="fileSelected" style="display: none" />
+
+            <button @click="$refs.imgInputChange[index].click()" name="modifyPhoto" class="button btnDelete">Ajouter une photo</button>
+            <button @click="modifyPost(modifPost, post.id)" class="button btnDelete">Envoyer le post modifier</button>
+          </div>
+        </div>
+      </div>
 
       <div>
-        <button @click="deletePost(post.id)" class="button btnDelete">Supprimer le post</button>
-        <button @click="switchModify()" class="button btnDelete">Modifier le post</button>
-        <!-- <input v-model="modifyPost" :class="{ mode: isActive }" type="text"  name="newPost" -->
-        <input :class="{ mode: isActive }" type="text" @input="modifPost = $event.target.value" name="newPost"
-          class="card__newPost" id="comment.id" placeholder="Modifier post ">
-
-        <input ref="imgInputChange" type="file" @change="fileSelected" :class="{ mode: isActive }">
-        <!-- <input style="display:none" ref="imgInputChange" type="file" @change="fileSelected"> -->
-        <!-- <button @click="$refs.imgInputChange.click()" name="modifyPhoto" class="button btnDelete">Ajouter une
-          photo</button> -->
-
-        <button :class="{ mode: isActive }" @click="modifyPost(modifPost, post.id)" class="button btnDelete">Envoyer
-          le post modifier</button>
+        <p class="card__text">
+          {{ post.message }}
+        </p>
+        <img v-show="post.imgUrl != null" class="card__img" :src="post.imgUrl" alt="description image" />
       </div>
+      <Comment :post="post" :getAllPost="getAllPost" />
+      <AddComment :postId="post.id" :getAllPost="getAllPost" />
     </div>
-
-
-    <div>
-      <p class="card__text">
-        {{ post.message }}
-      </p>
-      <img v-show="post.imgUrl != null" class="card__img" :src="post.imgUrl" alt="description image" />
-    </div>
-    <Comment :post="post" :getAllPost="getAllPost" />
-    <AddComment :postId="post.id" :getAllPost="getAllPost" />
-
-
   </div>
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref } from "vue";
 import Axios from "@/_services/caller.service";
-import Comment from './Comment.vue';
-import AddComment from './AddComment.vue';
+import Comment from "./Comment.vue";
+import AddComment from "./AddComment.vue";
 
-import { accountService } from "../_services/account.service"
+import { accountService } from "../_services/account.service";
 
 export default {
-  name: 'Post',
+  name: "Post",
   components: {
     Comment,
-    AddComment
+    AddComment,
   },
   props: {
     posts: { type: Array },
-    getAllPost: { type: Function }
+    getAllPost: { type: Function },
   },
   data() {
     return {
-      isActive: true,
-      post: ref(''),
+      isActive: null,
+
+      post: ref(""),
       newImage: null,
-      modifPost: '',
-    }
+      modifPost: "",
+    };
   },
   methods: {
     deletePost(postId) {
-      Axios.delete(`/post/${postId}`)
-        .then(() => {
-          console.log("Le post :", postId, "a été supprimer avec succès !");
-          this.getAllPost()
-        })
+      Axios.delete(`/post/${postId}`).then(() => {
+        console.log("Le post :", postId, "a été supprimer avec succès !");
+        this.getAllPost();
+      });
     },
-
-    // Modification post en travaux
-    switchModify() {
-      if (this.isActive == false) return this.isActive = true;
-      if (this.isActive == true) return this.isActive = false;
+    switchModify(postId) {
+      console.log(postId);
+      console.log(this.isActive);
+      // this.isActive = postId;
+      if (this.isActive == postId) {
+        this.isActive = null;
+      } else {
+        this.isActive = postId;
+      }
     },
     fileSelected(event) {
-      console.log('test fileSelected');
-      this.newImage = event.target.files[0]
+      this.newImage = event.target.files[0];
       console.log(this.newImage);
     },
     modifyPost(modifPost, postId) {
       let user = accountService.getLocalStorage();
       const formData = new FormData();
-      formData.append('message', this.modifPost);
-      formData.append('user_id', user.user_id);
-      formData.append('file', this.newImage);
-      Axios.put(`/post/${postId}`, formData)
-        .then(() => {
-          this.getAllPost();
-          console.log('Le post a été modifier avec succès !');
-        })
+      formData.append("message", this.modifPost);
+      formData.append("user_id", user.user_id);
+      formData.append("file", this.newImage);
+      Axios.put(`/post/${postId}`, formData).then(() => {
+        this.getAllPost();
+        this.isActive = null;
+        console.log("Le post a été modifier avec succès !");
+      });
     },
   },
-}
+};
 </script>
 
 
 <style lang="scss">
 @import "@/assets/sass/_variables.scss";
 
-.mode {
-  display: none;
-}
+// .mode {
+//   display: none;
+//   // visibility: hidden;
+// }
 
 .btnDelete {
   padding: 5px;
@@ -154,6 +154,5 @@ export default {
     padding: 10px;
     border-radius: 16px;
   }
-
 }
 </style>

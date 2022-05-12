@@ -14,28 +14,23 @@ const extractBearer = authorization => {
 }
 
 module.exports = (req, res, next) => {
-    console.log('req.headers.authorization : ', req.headers.authorization);
-    const token = req.headers.authorization && extractBearer(req.headers.authorization);
-    console.log('req.body : ', req.body);
-    console.log('Token : ', token);
+    try {
+        const token = req.headers.authorization && extractBearer(req.headers.authorization);
+        const verif = jwt.verify(token, process.env.TOKEN);
+        let userId = parseInt(verif.id)
 
-
-    const verif = jwt.verify(token, process.env.TOKEN);
-    // console.log('verif', verif);
-    let userId = parseInt(verif.id)
-    console.log('userId', userId);
-    DB.User.findOne({ where: { id: userId } })
-        .then(user => {
-            if (!user) {
-                return res.status(401).json({
-                    message: 'requête non autorisée'
-                })
-            } else {
-                req.body.user_id = user.id
-                console.log(req.body.user_id);
-                console.log('req.user.id', user.id);
-                console.log('fin des log auth');
-                next();
-            }
-        })
+        DB.User.findOne({ where: { id: userId } })
+            .then(user => {
+                if (!user) {
+                    return res.status(401).json({
+                        message: 'requête non autorisée'
+                    })
+                } else {
+                    req.body.user_id = user.id
+                    next();
+                }
+            })
+    } catch (error) {
+        return res.status(401).json({message: 'la requête est invalide ou non autorisé !'});
+    }
 };

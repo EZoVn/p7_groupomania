@@ -5,7 +5,6 @@ const path = require('path');
 const authRouter = require('./routes/auth');
 const postRouter = require('./routes/post');
 const commentsRouter = require('./routes/comments');
-const authCheck = require("./middleware/auth");
 /**Chargement du fichier .env */
 require('dotenv').config();
 
@@ -29,7 +28,6 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // Routes API
 app.use('/auth', authRouter);
-// app.use('/users', authCheck, usersRoutes);
 app.use('/users', usersRoutes);
 app.use('/post', postRouter);
 app.use('/comments', commentsRouter);

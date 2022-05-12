@@ -66,24 +66,32 @@ exports.signup = async (req, res) => {
 /************************ Modifier compte user************************/
 exports.modifyAccount = async (req, res) => {
     let userId = parseInt(req.params.id)
+    const { pseudo, email, description, imgUser } = req.body;
     if (!userId) {
         return res.status(400).json({ message: `Erreur id` })
     }
 
     try {
+        console.log('req.body ',req.body);
         let user = await User.findOne({ where: { id: userId }, raw: true });
-        console.log('modify let user: ', user);
+        // console.log('modify let user: ', user);
         if (user === null) {
             return res.status(404).json({ message: 'Utilisateur inéxistant !' })
         }
-
+        console.log(req.body);
+        console.log('req.file', req.file);
         // hash beforeUpdate in User model
         // let hash = await bcrypt.hash(req.body.password, parseInt(process.env.BCRYPT_SALT_ROUND))
         // req.body.password = hash;
+        if(req.file){
+            console.log('il y a une photo de profil');
+        }
+        if(!req.file){
+            console.log('Il n y a pas de photo');
+            await User.update(req.body, { where: { id: userId }, individualHooks: true })
+            return res.status(200).json({ message: 'Compte mis à jour', data: user })
+        }
 
-        await User.update(req.body, { where: { id: userId }, individualHooks: true })
-
-        return res.status(200).json({ message: 'Compte mis à jour', data: user })
 
     } catch (error) {
         return res.status(500).json({ message: 'Database Error', error: error })
