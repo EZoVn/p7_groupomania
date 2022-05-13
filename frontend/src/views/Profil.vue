@@ -1,29 +1,52 @@
 <template>
   <div>
+    <div class="card">
+      <!-- <ul>
+        <li>{{ user.pseudo }}</li>
+        <li>{{ user.email }}</li>
+        <li>Courte description de l'utilisateur : {{ user.descriptionUser }}</li>
+      </ul> -->
+      <div class="card card__profil">
+        <p class="card__profil--pseudo">{{ user.pseudo }}</p>
+        <p class="card__profil--description">Email : {{ user.email }}</p>
+      </div>
+      <img class="card__profil--img" :src="user.imgUser" @click="tt" alt="Photo de profil" />
+      <div class="card">
+        <p class="card__profil--description">Courte description de l'utilisateur : {{ user.descriptionUser }}</p>
+      </div>
+    </div>
+
+    <button @click="switchModify()" class="button btnDelete">Modifier le profil</button>
+    <button @click="deleteAccount(user.id)" class="button btnDelete">Supprimer le profil</button>
+
     <!-- Modification Account -->
     <div class="card" :class="{ mode: isActive }">
-      <input v-model="newPseudo" class="card__newPost" type="text" name="newpseudo" placeholder="Changer de pseudo ici " />
-      <input v-model="newEmail" class="card__newPost" type="email" name="newEmail" placeholder="Modifier votre email " />
-      <input v-model="newDescription" class="card__newPost" type="text" name="newDescription" placeholder="Modifier votre description " />
+      <div class="card__modif">
+        <input v-model="newEmail" class="card__newPost" type="email" name="newEmail" placeholder="Modifier votre email " />
+        <button @click="changeMail(user.id)" class="button btnDelete">change email</button>
+      </div>
+
+      <div class="card__modif">
+        <input v-model="newPseudo" class="card__newPost" type="text" name="newpseudo" placeholder="Changer de pseudo ici " />
+        <button @click="changePseudo(user.id)" class="button btnDelete">Changer le pseudo</button>
+      </div>
+
+      <div class="card__modif">
+        <input v-model="newPassword" class="card__newPost" type="password" name="newEmail" placeholder="Modifier votre mot de passe " />
+        <input v-model="newPasswordVerif" class="card__newPost" type="password" name="newEmail" placeholder="Vérifier votre mot de passe " />
+        <button @click="changePassword(user.id)" class="button btnDelete">Changer le mot de passe</button>
+      </div>
+
+      <div class="card__modif">
+        <input v-model="newDescription" class="card__newPost" type="text" name="newDescription" placeholder="Modifier votre description " />
+        <button @click="changeDescription(user.id)" class="button btnDelete">Changer la description</button>
+      </div>
 
       <input ref="imgChange" type="file" @change="fileSelected" style="display: none" />
       <button @click="$refs.imgChange.click()" name="modifyPhoto" class="button btnDelete">Ajouter une photo</button>
-
-      <button @click="modifyAccount(user.id)" class="button btnDelete">Modifier le profil utilisateur</button>
+      <button @click="changePhoto(user.id)" class="button btnDelete">Changer la photo de profil</button>
     </div>
-
-    <div class="card card__profil">
-      {{ user.id }}
-      <p class="card__profil--pseudo">{{ user.pseudo }}</p>
-      <p class="card__profil--description">Email : {{ user.email }}</p>
-
-      <img class="card__profil--img" :src="user.imgUser" @click="tt" alt="Photo de profil" />
-    </div>
-    <div class="card">
-      <p class="card__profil--description">Courte description de l'utilisateur : {{ user.descriptionUser }}</p>
-    </div>
-    <button @click="switchModify()" class="button btnDelete">Modifier le profil</button>
-    <button @click="deleteAccount(user.id)" class="button btnDelete">Supprimer le profil</button>
+    
 
     <Post :posts="postsUser" :getAllPost="getAllPostUser" />
   </div>
@@ -31,7 +54,7 @@
 
 
 <script >
-import Axios from "@/_services/caller.service";
+import Axios from "@/_services/caller.service.js";
 import Post from "../components/Post.vue";
 import { ref } from "vue";
 
@@ -50,8 +73,10 @@ export default {
       postsUser: [],
       newPseudo: "",
       newEmail: "",
-      newimage: null,
+      newImage: null,
       newDescription: "",
+      newPassword: "",
+      newPasswordVerif: "",
     };
   },
   created() {
@@ -65,7 +90,6 @@ export default {
     getOneUser() {
       Axios.get(`/users/${localeUser.user_id}`).then((res) => {
         this.user = res.data.data;
-        console.log("this.user : ", this.user);
       });
     },
     deleteAccount(userId) {
@@ -84,18 +108,42 @@ export default {
       this.newImage = event.target.files[0];
       console.log(this.newImage);
     },
-    modifyAccount(userId) {
-      console.log(`userId : ${userId} // email : ${this.newEmail} // pseudo : ${this.newPseudo} // imgUser : ${this.newImage}`);
-      console.log(this.newEmail);
-      const formData = new FormData();
-      formData.append("email", this.newEmail);
-      formData.append("pseudo", this.newPseudo);
-      formData.append("user_id", userId);
-      formData.append("file", this.newImage);
-      console.log(formData);
-      Axios.put(`/users/${userId}`, formData).then((res) => {
+   
+    changeMail(userId) {
+      Axios.put(`/users/${userId}`, { email: this.newEmail }).then((res) => {
         console.log(res);
         this.getOneUser();
+      });
+    },
+    changePseudo(userId) {
+        Axios.put(`/users/${userId}`, { pseudo: this.newPseudo }).then((res) => {
+          console.log(res);
+          this.getOneUser();
+        });
+    },
+    changePassword(userId) {
+      if (this.newPassword === this.newPasswordVerif) {
+        Axios.put(`/users/${userId}`, { password: this.newPassword }).then((res) => {
+          console.log(res);
+          this.getOneUser();
+        });
+      } else {
+        console.log("error mot de passe non identique");
+      }
+    },
+    changeDescription(userId) {
+      Axios.put(`/users/${userId}`, { descriptionUser: this.newDescription }).then((res) => {
+        console.log(res);
+        this.getOneUser();
+      });
+    },
+     changePhoto(userId) {
+      const formData = new FormData();
+      formData.append("file", this.newImage);
+      console.log(formData);
+      Axios.put(`/users/${userId}`, formData).then(() => {
+        // this.getAllPost();
+        console.log("L'utilisateur a été modifier avec succès !");
       });
     },
   },
@@ -109,7 +157,9 @@ export default {
 
 .card {
   width: auto;
-
+  &__modif {
+    display: flex;
+  }
   &__profil {
     display: flex;
     justify-content: space-between;

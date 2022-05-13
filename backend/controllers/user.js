@@ -1,6 +1,6 @@
-const { all } = require('../app');
+// const { all } = require('../app');
 const DB = require('../database');
-
+const bcrypt = require('bcrypt');
 const User = DB.User;
 
 
@@ -46,10 +46,6 @@ exports.signup = async (req, res) => {
             return res.status(409).json({ message: `Cette email ${email} est déjà existant !` });
         }
 
-        // Hash beforeCreate in User model
-        // let hash = await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT_ROUND));
-        // req.body.password = hash;
-
         let createUser = await User.create(req.body);
 
         return res.status(201).json({ message: 'Utilisateur crée', data: createUser });
@@ -66,35 +62,43 @@ exports.signup = async (req, res) => {
 /************************ Modifier compte user************************/
 exports.modifyAccount = async (req, res) => {
     let userId = parseInt(req.params.id)
-    const { pseudo, email, description, imgUser } = req.body;
+    const user_id = parseInt(req.body.user_id);
+    const { pseudo, email, descriptionUser, password } = req.body;
+    console.log(req.body.user_id);
     if (!userId) {
         return res.status(400).json({ message: `Erreur id` })
     }
-
+    console.log('pseudo',pseudo);
+    console.log('email',email);
+    console.log('descriptionUser',descriptionUser);
+    console.log('password',password);
     try {
-        console.log('req.body ',req.body);
+        console.log('req.body ', req.body);
         let user = await User.findOne({ where: { id: userId }, raw: true });
-        // console.log('modify let user: ', user);
+        console.log('modify let user: ', user);
         if (user === null) {
             return res.status(404).json({ message: 'Utilisateur inéxistant !' })
         }
-        console.log(req.body);
+        console.log(req.body.pseudo);
         console.log('req.file', req.file);
-        // hash beforeUpdate in User model
-        // let hash = await bcrypt.hash(req.body.password, parseInt(process.env.BCRYPT_SALT_ROUND))
-        // req.body.password = hash;
-        if(req.file){
-            console.log('il y a une photo de profil');
+
+        
+        if (req.body.password && req.body.password != '') {
+            console.log('why');
+            let hash = await bcrypt.hash(req.body.password, parseInt(process.env.BCRYPT_SALT_ROUND))
+            req.body.password = hash;
         }
-        if(!req.file){
+
+        
             console.log('Il n y a pas de photo');
-            await User.update(req.body, { where: { id: userId }, individualHooks: true })
+            // await User.update(req.body, { where: { id: userId }, individualHooks: true })
+            await User.update(req.body, { where: { id: userId } })
             return res.status(200).json({ message: 'Compte mis à jour', data: user })
-        }
+        
 
 
     } catch (error) {
-        return res.status(500).json({ message: 'Database Error', error: error })
+        return res.status(500).json({ message: 'Database Error user', error: error })
     }
 }
 

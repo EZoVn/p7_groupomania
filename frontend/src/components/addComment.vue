@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <input type="text" @input="commentaire = $event.target.value" name="newPost" class="card__newPost" id="key"
+        <input type="text" v-model="commentaire" name="newPost" class="card__newPost" 
             placeholder="Ajouter un commentaire ">
         <div class="btn">
             <button @click="addComment(commentaire, postId)" class="button btnDelete">Envoyer</button>
@@ -27,6 +27,7 @@ export default {
             Axios.post(`/comments/${[postId]}`, { comment })
                 .then(() => {
                     this.getAllPost()
+                    this.commentaire = '';
                 })
         },
     },

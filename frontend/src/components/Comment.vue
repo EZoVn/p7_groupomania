@@ -1,6 +1,6 @@
 <template>
   <div class="comment">
-    <p>Commentaires :</p>
+    <p v-if="post.Comments != ''">Commentaires :</p>
     <br />
     <p v-if="post.Comments == ''">Aucun commentaire ..</p>
     <div v-for="(comment, index) in post.Comments" :key="index" class="card__comment">
@@ -18,7 +18,7 @@
 
       <p>{{ comment.comment }}</p>
       <div v-show="isActive == index">
-        <input type="text" @input="commentaire = $event.target.value" name="newPost" class="card__newPost" id="comment.id" placeholder="Modifier commentaire " />
+        <input type="text" v-model="commentaire" name="newPost" class="card__newPost" id="index" placeholder="Modifier commentaire " />
         <button @click="modifyComment(commentaire, comment.id)" class="button btnDelete">Envoyer le commentaire modifier</button>
       </div>
     </div>
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+// import { ref } from "vue";
 import Axios from "@/_services/caller.service";
 
 export default {
@@ -34,7 +34,8 @@ export default {
   data() {
     return {
       isActive: null,
-      commentaire: ref(""),
+      commentaire: "",
+      // commentaire: ref(""),
     };
   },
   props: {
@@ -51,15 +52,19 @@ export default {
       }
     },
     modifyComment(comment, commentId) {
-      console.log(commentId);
-      Axios.put(`/comments/${commentId}`, { comment })
-        .then(() => {
-          this.getAllPost();
-          console.log("Le commentaire a bien été modifier !");
-          this.isActive = null;
-        })
-        .catch((e) => console.log("error", e));
-      this.isActive = true;
+      if(this.commentaire != ''){
+        Axios.put(`/comments/${commentId}`, { comment })
+          .then(() => {
+            this.getAllPost();
+            this.commentaire = '';
+            this.isActive = null;
+            console.log("Le commentaire a bien été modifier !");
+          })
+          .catch((e) => console.log("error", e));
+        this.isActive = true;
+      } else {
+        console.log("Le commentaire est vide !");
+    }
     },
     deleteComment(commentId) {
       Axios.delete(`/comments/${commentId}`)
@@ -89,7 +94,7 @@ export default {
   &__comment {
     margin: 5px;
     padding: 15px;
-    border: 1px solid $red;
+    border: 1px solid $grey;
     border-radius: 25px;
     background-image: linear-gradient(57deg, $blue 0%, $grey 130%);
 

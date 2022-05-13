@@ -50,14 +50,12 @@ exports.getOneComment = async (req, res, next) => {
 exports.modifyComment = async (req, res, next) => {
     try {
         let comId = parseInt(req.params.id);
-        // comparer comId avec l'id du token req.body.user_id
         let comment = await DB.Comments.findOne({ where: { id: comId }, raw: true });
         if (comment === null) {
             return res.status(404).json({ message: `Le commentaire ${comId} est inexistant !` })
         }
         
         const user_id = req.body.user_id
-        console.log('user_id', user_id)
 
         if (comment.user_id === user_id) {
 

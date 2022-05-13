@@ -24,6 +24,7 @@ Axios.interceptors.response.use(response => {
     if (error.response.status == 401) {
         console.log('if error');
         localStorage.removeItem('user');
+        // regler le probleme du router en fin de session
         router.push('/');
     }
 })

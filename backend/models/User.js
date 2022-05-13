@@ -26,11 +26,11 @@ module.exports = (sequelize) => {
         user.password = hash;
     });
 
-    User.beforeUpdate( async (user, options) => {
-        let hash = await bcrypt.hash(user.password, parseInt(process.env.BCRYPT_SALT_ROUND))
-        user.password = hash;
-        return hash;
-    });
+    // User.beforeUpdate( async (user, options) => {
+    //     let hash = await bcrypt.hash(user.password, parseInt(process.env.BCRYPT_SALT_ROUND))
+    //     user.password = hash;
+    //     return hash;
+    // });
 
     return User;
 };

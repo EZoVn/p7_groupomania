@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <div  :key="post.id" v-for="post in posts" class="card"> -->
     <div :key="index" v-for="(post, index) in posts" class="card">
       <div class="card__profil">
         <img class="card__profil--img" :src="post.User.imgUser" alt="Photo de profil" />
@@ -8,10 +7,11 @@
 
         <div>
           <button @click="deletePost(post.id)" class="button btnDelete">Supprimer le post</button>
-          <button @click="switchModify(index)" class="button btnDelete">Modifier le post</button>
+          <button v-if="isActive == index" @click="switchModify(index)" class="button btnDelete">Annuler</button>
+          <button v-if="isActive == null" @click="switchModify(index)" class="button btnDelete">Modifier le post</button>
 
           <div  v-show="isActive == index">
-            <input type="text" @input="modifPost = $event.target.value" name="newPost" class="card__newPost" id="comment.id" placeholder="Modifier post " />
+            <input type="text" @input="modifPost = $event.target.value" name="newPost" class="card__newPost"  placeholder="Modifier post " />
             <input ref="imgInputChange" type="file" @change="fileSelected" style="display: none" />
 
             <button @click="$refs.imgInputChange[index].click()" name="modifyPhoto" class="button btnDelete">Ajouter une photo</button>
@@ -26,6 +26,9 @@
         </p>
         <img v-show="post.imgUrl != null" class="card__img" :src="post.imgUrl" alt="description image" />
       </div>
+      <br>
+      <br>
+      <hr>
       <Comment :post="post" :getAllPost="getAllPost" />
       <AddComment :postId="post.id" :getAllPost="getAllPost" />
     </div>
@@ -100,10 +103,6 @@ export default {
 <style lang="scss">
 @import "@/assets/sass/_variables.scss";
 
-// .mode {
-//   display: none;
-//   // visibility: hidden;
-// }
 
 .btnDelete {
   padding: 5px;

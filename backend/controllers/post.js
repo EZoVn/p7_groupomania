@@ -43,7 +43,6 @@ exports.modifyPost = async (req, res, next) => {
     try {
         let postId = parseInt(req.params.id)
         const user_id = parseInt(req.body.user_id);
-
         let post = await DB.Post.findOne({ where: { id: postId }, raw: true })
         if (post === null) {
             return res.status(404).json({ message: `Le message ${postId} est inexistant !` })
