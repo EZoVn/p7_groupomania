@@ -1,5 +1,5 @@
 import axios from 'axios';
-import router from '../router/index.js'
+// import router from '../router/index.js'
 
 const Axios = axios.create({
     baseURL: 'http://localhost:8080'
@@ -17,16 +17,16 @@ Axios.interceptors.request.use(request => {
     return request;
 });
 
-Axios.interceptors.response.use(response => {
-    return response;
-}, error => {
-    console.log(error.response.status);
-    if (error.response.status == 401) {
-        console.log('if error');
-        localStorage.removeItem('user');
-        // regler le probleme du router en fin de session
-        router.push('/');
-    }
-})
+// Axios.interceptors.response.use(response => {
+//     return response;
+// }, error => {
+//     console.log(error.response.status);
+//     if (error.response.status == 401) {
+//         console.log('if error');
+//         localStorage.removeItem('user');
+//         // regler le probleme du router en fin de session
+//         router.push('/');
+//     }
+// })
 
 export default Axios;

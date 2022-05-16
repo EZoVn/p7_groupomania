@@ -5,8 +5,9 @@ export default {
   name: 'App',
   methods:{
     logout() {
-      this.$store.commit('logout'),
-      this.$router.push('/')
+      this.$store.commit('logout');
+      this.$router.push('/');
+      // this.$router.go('/')
     }
   }
 }
@@ -48,13 +49,11 @@ export default {
 @import "@/assets/reset.css";
 
 * {
-  // roboto pour les titres
   font-family: 'roboto', sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  // montserrat pour les textes
-  // font-family: 'montserrat', sans-serif;
+
 }
 textarea{
   resize: none;

@@ -17,6 +17,7 @@ module.exports = (req, res, next) => {
     try {
         const token = req.headers.authorization && extractBearer(req.headers.authorization);
         const verif = jwt.verify(token, process.env.TOKEN);
+        console.log(verif);
         let userId = parseInt(verif.id)
 
         DB.User.findOne({ where: { id: userId } })
@@ -27,6 +28,7 @@ module.exports = (req, res, next) => {
                     })
                 } else {
                     req.body.user_id = user.id
+                    console.log('auth',req.body);
                     next();
                 }
             })

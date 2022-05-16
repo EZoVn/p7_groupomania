@@ -6,12 +6,13 @@
         <p class="card__title">{{ post.User.pseudo }}</p>
 
         <div>
-          <button @click="deletePost(post.id)" class="button btnDelete">Supprimer le post</button>
-          <button v-if="isActive == index" @click="switchModify(index)" class="button btnDelete">Annuler</button>
-          <button v-if="isActive == null" @click="switchModify(index)" class="button btnDelete">Modifier le post</button>
 
-          <div  v-show="isActive == index">
-            <input type="text" @input="modifPost = $event.target.value" name="newPost" class="card__newPost"  placeholder="Modifier post " />
+          <button v-if="post.User.id === userId" @click="deletePost(post.id)" class="button btnDelete">Supprimer le post</button>
+          <button v-if="post.User.id === userId && isActive == null"  @click="switchModify(index)" class="button btnDelete">Modifier le post</button>
+          <button v-if="isActive == index" @click="switchModify(index)" class="button btnDelete">Annuler</button>
+
+          <div v-show="isActive == index">
+            <input type="text" @input="modifPost = $event.target.value" name="newPost" class="card__newPost" placeholder="Modifier post " />
             <input ref="imgInputChange" type="file" @change="fileSelected" style="display: none" />
 
             <button @click="$refs.imgInputChange[index].click()" name="modifyPhoto" class="button btnDelete">Ajouter une photo</button>
@@ -26,9 +27,9 @@
         </p>
         <img v-show="post.imgUrl != null" class="card__img" :src="post.imgUrl" alt="description image" />
       </div>
-      <br>
-      <br>
-      <hr>
+      <br />
+      <br />
+      <hr />
       <Comment :post="post" :getAllPost="getAllPost" />
       <AddComment :postId="post.id" :getAllPost="getAllPost" />
     </div>
@@ -56,11 +57,15 @@ export default {
   data() {
     return {
       isActive: null,
-
       post: ref(""),
       newImage: null,
       modifPost: "",
+      userId: ""
     };
+  },
+  mounted() {
+    let user = accountService.getLocalStorage();
+    this.userId = user.user_id;
   },
   methods: {
     deletePost(postId) {
@@ -89,6 +94,7 @@ export default {
       formData.append("message", this.modifPost);
       formData.append("user_id", user.user_id);
       formData.append("file", this.newImage);
+      console.log(formData);
       Axios.put(`/post/${postId}`, formData).then(() => {
         this.getAllPost();
         this.isActive = null;
@@ -102,7 +108,6 @@ export default {
 
 <style lang="scss">
 @import "@/assets/sass/_variables.scss";
-
 
 .btnDelete {
   padding: 5px;

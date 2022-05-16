@@ -1,73 +1,74 @@
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
-  name: 'Home',
-  
+  name: "Home",
+
   data: function () {
     return {
-      mode: 'login',
-      pseudo: '',
-      email: '',
-      password: '',
-      passwordVerif: '',
-    }
+      mode: "login",
+      pseudo: "",
+      email: "",
+      password: "",
+      passwordVerif: "",
+    };
   },
-   mounted: function () {
+  mounted() {
     if (this.$store.state.user.userId != -1) {
-      this.$router.push('/profil');
-      return ;
+      this.$router.push("/profil");
+      return;
     }
   },
   computed: {
-    validatedFields: function () {
-      if (this.mode == 'create') {
-        if (this.pseudo != '' && this.email != '' && this.password != '') return true;
+    validatedFields() {
+      if (this.mode == "create") {
+        if (this.pseudo != "" && this.email != "" && this.password != "") return true;
         else return false;
       } else {
-        if (this.email != '' && this.password != '') return true;
+        if (this.email != "" && this.password != "") return true;
         else return false;
       }
     },
-    ...mapState(['status'])
-
+    ...mapState(["status"]),
   },
   methods: {
-    switchCreateAccount: function () {
-      this.mode = 'create';
+    switchCreateAccount() {
+      this.mode = "create";
     },
-    switchLogin: function () {
-      this.mode = 'login';
+    switchLogin() {
+      this.mode = "login";
     },
-    createAccount: function () {
+    createAccount() {
       if (this.password != this.passwordVerif) {
-        return console.error('Mot de passe non identique');
+        return console.error("Mot de passe non identique");
       }
-      this.$store.dispatch('createAccount', {
+      this.$store.dispatch("createAccount", {
         pseudo: this.pseudo,
         email: this.email,
         password: this.password,
-      })
+      });
+      this.mode = "login";
+      this.password = "";
     },
-    login: function () {
-      this.$store.dispatch('login', {
-        email: this.email,
-        password: this.password
-      }).then( () => {
-          this.$router.push('/post');
+    login() {
+      this.$store
+        .dispatch("login", {
+          email: this.email,
+          password: this.password,
         })
-    }
-  }
-}
+        .then(() => {
+          this.$router.push("/post");
+        });
+    },
+  },
+};
 </script>
 
-<template> 
+<template>
   <div class="card">
     <h1 v-if="mode == 'login'" class="card__title">Connexion</h1>
     <h1 v-else class="card__title">Inscription</h1>
-    <p v-if="mode == 'login'" class="card__subtitle">Tu n'as pas encore de compte ? <span class="card__action"
-        @click="switchCreateAccount()">Créer un compte</span></p>
-    <p v-else class="card__subtitle">Tu as déjà un compte ? <span class="card__action" @click="switchLogin()">Se
-        connecter</span></p>
+    <p v-if="mode == 'login'" class="card__subtitle">Tu n'as pas encore de compte ? <span class="card__action" @click="switchCreateAccount()">Créer un compte</span></p>
+    <p v-else class="card__subtitle">Tu as déjà un compte ? <span class="card__action" @click="switchLogin()">Se connecter</span></p>
     <div class="form-row">
       <input v-model="pseudo" v-show="mode != 'login'" class="form-row__input" type="text" placeholder="Pseudo" />
     </div>
@@ -75,18 +76,13 @@ export default {
       <input v-model="email" class="form-row__input" type="email" placeholder="Adresse mail" />
     </div>
     <div class="form-row">
-      <input v-model="password" class="form-row__input" type="password" placeholder="Mot de passe">
+      <input v-model="password" class="form-row__input" type="password" placeholder="Mot de passe" />
     </div>
     <div class="form-row">
-      <input v-if="mode == 'create'" v-model="passwordVerif" class="form-row__input" type="password"
-        placeholder="Vérification mot de passe">
+      <input v-if="mode == 'create'" v-model="passwordVerif" class="form-row__input" type="password" placeholder="Vérification mot de passe" />
     </div>
-    <div class="form-row" v-if="mode == 'login' && status == 'error_login'">
-      Adresse mail et/ou mot de passe invalide
-    </div>
-    <div class="form-row" v-if="mode == 'create' && status == 'error_create'">
-      Adresse mail déjà utilisée
-    </div>
+    <div class="form-row" v-if="mode == 'login' && status == 'error_login'">Adresse mail et/ou mot de passe invalide</div>
+    <div class="form-row" v-if="mode == 'create' && status == 'error_create'">Adresse mail déjà utilisée</div>
     <div class="form-row">
       <button v-if="mode == 'login'" @click="login()" class="button" :class="{ 'button--disabled': !validatedFields }">
         <span v-if="status == 'loading'">Connexion en cours...</span>
@@ -98,7 +94,6 @@ export default {
       </button>
     </div>
   </div>
-
 </template>
 
 <style lang="scss">
@@ -121,7 +116,7 @@ export default {
   }
 
   &__action {
-    color: #2196F3;
+    color: #2196f3;
     text-decoration: underline;
 
     &:hover {

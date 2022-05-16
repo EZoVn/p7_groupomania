@@ -26,8 +26,8 @@ export default {
         addComment(comment, postId) {
             Axios.post(`/comments/${[postId]}`, { comment })
                 .then(() => {
-                    this.getAllPost()
                     this.commentaire = '';
+                    this.getAllPost()
                 })
         },
     },

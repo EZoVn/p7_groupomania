@@ -11,9 +11,8 @@
 
 <script>
 import Axios from "@/_services/caller.service";
-
-let locale = localStorage.getItem("user");
-let user = JSON.parse(locale);
+import { accountService } from "../_services/account.service";
+let user = accountService.getLocalStorage();
 
 export default {
   name: "AddPost",

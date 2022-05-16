@@ -2,7 +2,7 @@
 const DB = require('../database');
 const bcrypt = require('bcrypt');
 const User = DB.User;
-
+const fs = require('fs');
 
 
 /**################################################################# */
@@ -34,7 +34,7 @@ exports.oneUser = (req, res) => {
 /**################################################################# */
 /**************** Création de compte *********************************/
 exports.signup = async (req, res) => {
-    const { pseudo, email, password } = req.body;
+    const { pseudo, email, password, isAdmin } = req.body;
 
     if (!email || !pseudo || !password) {
         return res.status(400).json({ message: 'Missing Data' })
@@ -61,41 +61,53 @@ exports.signup = async (req, res) => {
 /**################################################################# */
 /************************ Modifier compte user************************/
 exports.modifyAccount = async (req, res) => {
+    // console.log('req.body ', req.body);
+    console.log('req.file ', req.file);
     let userId = parseInt(req.params.id)
     const user_id = parseInt(req.body.user_id);
     const { pseudo, email, descriptionUser, password } = req.body;
-    console.log(req.body.user_id);
     if (!userId) {
         return res.status(400).json({ message: `Erreur id` })
     }
-    console.log('pseudo',pseudo);
-    console.log('email',email);
-    console.log('descriptionUser',descriptionUser);
-    console.log('password',password);
     try {
-        console.log('req.body ', req.body);
         let user = await User.findOne({ where: { id: userId }, raw: true });
         console.log('modify let user: ', user);
         if (user === null) {
             return res.status(404).json({ message: 'Utilisateur inéxistant !' })
         }
-        console.log(req.body.pseudo);
-        console.log('req.file', req.file);
 
-        
         if (req.body.password && req.body.password != '') {
             console.log('why');
             let hash = await bcrypt.hash(req.body.password, parseInt(process.env.BCRYPT_SALT_ROUND))
             req.body.password = hash;
         }
 
-        
-            console.log('Il n y a pas de photo');
-            // await User.update(req.body, { where: { id: userId }, individualHooks: true })
-            await User.update(req.body, { where: { id: userId } })
-            return res.status(200).json({ message: 'Compte mis à jour', data: user })
-        
+        if (req.file) {
+            console.log('Fichier file trouvé');
+            console.log(user.imgUser);
+            if (user.imgUser != 'http://localhost:8080/images/imgProfilDefault/photoProfilBase.png') {
+            // if (user.imgUser != null) {
+                const ancienneImage = user.imgUser.split(/images/)[1];
+                console.log(ancienneImage);
+                fs.unlink(`./images/${ancienneImage}`, (err => {
+                    console.log('ici');
+                    if (err) console.log(err);
+                    else {
+                        console.log("Ancienne image effacé " + ancienneImage);
+                    }
+                }))
+            }
+            let imgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+            console.log(imgUrl);
+            await User.update({ imgUser: imgUrl }, { where: { id: userId } });
+            return res.status(200).json({ message: 'Message modifié avec succès !!' })
 
+        }
+        else if (!req.file) {
+            console.log('No req.file');
+            await User.update(req.body, { where: { id: userId } });
+            return res.status(200).json({ message: 'Message modifié avec succès !!' })
+        }
 
     } catch (error) {
         return res.status(500).json({ message: 'Database Error user', error: error })

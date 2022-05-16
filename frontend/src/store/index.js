@@ -10,13 +10,12 @@ let user = localStorage.getItem('user');
 if (!user) {
     user = {
         userId: -1,
-        token: '',
+        access_token: '',
     };
 } else {
     try {
         user = JSON.parse(user);
-        console.log(user.user_id);
-        instance.defaults.headers.common['Authorization'] = user.token;
+        instance.defaults.headers.common['Authorization'] = user.access_token;
     } catch (ex) {
         user = {
             userId: -1,
@@ -35,9 +34,10 @@ const store = createStore({
             state.status = status;
         },
         logUser: function (state, user) {
-            instance.defaults.headers.common['Authorization'] = user.token;
+            instance.defaults.headers.common['Authorization'] = user.access_token;
             localStorage.setItem('user', JSON.stringify(user));
             state.user = user;
+            console.log(user);
         },
         logout: function (state) {
             state.user = {
@@ -51,7 +51,6 @@ const store = createStore({
         createAccount: ({ commit }, userInfos) => {
             commit('setStatus', 'loading');
             return new Promise((resolve, reject) => {
-                commit;
                 instance.post('/users/signup', userInfos)
                     .then(res => {
                         commit('setStatus', 'created');

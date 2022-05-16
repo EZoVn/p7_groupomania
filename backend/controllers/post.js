@@ -50,7 +50,8 @@ exports.modifyPost = async (req, res, next) => {
 
         if (post.user_id === user_id) {
             if (req.file) {
-                if (post.imgurl != null) {
+                console.log(post.imgUrl);
+                if (post.imgUrl != null) {
                     const ancienneImage = post.imgUrl.split(/images/)[1];
                     fs.unlink(`./images/${ancienneImage}`, (err => {
                         if (err) console.log(err);
@@ -58,11 +59,11 @@ exports.modifyPost = async (req, res, next) => {
                             console.log("Ancienne image effacé " + ancienneImage);
                         }
                     }))
-                } else {
-                    let imgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-                    await Post.update({ user_id, message: req.body.message, imgUrl }, { where: { id: postId } });
-                    return res.status(200).json({ message: 'Message modifié avec succès !!' })
                 }
+                let imgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+                await Post.update({ user_id, message: req.body.message, imgUrl }, { where: { id: postId } });
+                return res.status(200).json({ message: 'Message modifié avec succès !!' })
+
             }
             if (!req.file) {
                 console.log('No req.file');

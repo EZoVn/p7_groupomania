@@ -3,6 +3,7 @@
     <p v-if="post.Comments != ''">Commentaires :</p>
     <br />
     <p v-if="post.Comments == ''">Aucun commentaire ..</p>
+    
     <div v-for="(comment, index) in post.Comments" :key="index" class="card__comment">
       <div class="card__comment--info">
         <div class="card__comment--user">
@@ -10,15 +11,15 @@
           <p>{{ comment.User.pseudo }}</p>
         </div>
         <div>
-          <button @click="deleteComment(comment.id)" class="button btnDelete">Supprimer</button>
-          <button @click="switchModify(index)" class="button btnDelete">Modifier</button>
+          
+          <button v-if="comment.User.id === userId" @click="deleteComment(comment.id)" class="button btnDelete">Supprimer</button>
+          <button v-if="comment.User.id === userId" @click="switchModify(index)" class="button btnDelete">Modifier</button>
         </div>
       </div>
 
-
       <p>{{ comment.comment }}</p>
       <div v-show="isActive == index">
-        <input type="text" v-model="commentaire" name="newPost" class="card__newPost" id="index" placeholder="Modifier commentaire " />
+        <input type="text" v-model="commentaire" name="newPost" class="card__newPost"  placeholder="Modifier commentaire " />
         <button @click="modifyComment(commentaire, comment.id)" class="button btnDelete">Envoyer le commentaire modifier</button>
       </div>
     </div>
@@ -26,8 +27,8 @@
 </template>
 
 <script>
-// import { ref } from "vue";
 import Axios from "@/_services/caller.service";
+import { accountService } from "../_services/account.service";
 
 export default {
   name: "Comment",
@@ -35,14 +36,17 @@ export default {
     return {
       isActive: null,
       commentaire: "",
-      // commentaire: ref(""),
+      userId: "",
     };
   },
   props: {
     post: { type: Object },
     getAllPost: { type: Function },
   },
-
+  mounted() {
+    let user = accountService.getLocalStorage();
+    this.userId = user.user_id;
+  },
   methods: {
     switchModify(commentId) {
       if (this.isActive == commentId) {
@@ -52,11 +56,11 @@ export default {
       }
     },
     modifyComment(comment, commentId) {
-      if(this.commentaire != ''){
+      if (this.commentaire != "") {
         Axios.put(`/comments/${commentId}`, { comment })
           .then(() => {
             this.getAllPost();
-            this.commentaire = '';
+            this.commentaire = "";
             this.isActive = null;
             console.log("Le commentaire a bien été modifier !");
           })
@@ -64,7 +68,7 @@ export default {
         this.isActive = true;
       } else {
         console.log("Le commentaire est vide !");
-    }
+      }
     },
     deleteComment(commentId) {
       Axios.delete(`/comments/${commentId}`)
