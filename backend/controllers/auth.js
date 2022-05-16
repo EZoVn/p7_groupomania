@@ -15,7 +15,6 @@ exports.login = async (req, res) => {
             return res.status(401).json({ message: `Ce compte n'existe pas !` });
         }
 
-        // let valid = await bcrypt.compare(password, user.password);
         let valid = await User.checkPassword(password, user.password);
 
         if (!valid) return res.status(401).json({ message: 'Mot de passe incorrect' });
@@ -28,8 +27,7 @@ exports.login = async (req, res) => {
         }, process.env.TOKEN,
             { expiresIn: process.env.TOKEN_DURING });
 
-        return res.status(200).json({ access_token: token, user_id:user.id, isAdmin: user.isAdmin })
-        // return res.status(200).json({ access_token: token, user_id: user_id })
+        return res.status(200).json({ access_token: token, user_id:user.id })
     } catch (error) {
         if(error.name == 'SequelizeDatabaseError'){
             res.status(500).json({ message: 'Database Error' });

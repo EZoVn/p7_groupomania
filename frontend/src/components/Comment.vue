@@ -3,7 +3,7 @@
     <p v-if="post.Comments != ''">Commentaires :</p>
     <br />
     <p v-if="post.Comments == ''">Aucun commentaire ..</p>
-    
+
     <div v-for="(comment, index) in post.Comments" :key="index" class="card__comment">
       <div class="card__comment--info">
         <div class="card__comment--user">
@@ -12,8 +12,8 @@
         </div>
         <div>
           
-          <button v-if="comment.User.id === userId" @click="deleteComment(comment.id)" class="button btnDelete">Supprimer</button>
-          <button v-if="comment.User.id === userId" @click="switchModify(index)" class="button btnDelete">Modifier</button>
+          <button v-if="comment.User.id === userId" @click="switchModify(index)" class="button btnDelete"><font-awesome-icon icon="pen" /></button>
+          <button v-if="comment.User.id === userId" @click="deleteComment(comment.id)" class="button btnDelete"><font-awesome-icon icon="trash" /></button>
         </div>
       </div>
 
@@ -85,9 +85,6 @@ export default {
 <style lang="scss">
 @import "@/assets/sass/_variables.scss";
 
-.mode {
-  display: none;
-}
 
 .comment {
   margin-top: 25px;

@@ -24,15 +24,13 @@ export default {
 
     <div class="wrapper">
 
-      <button @click="logout()" class="deconnexion">Deconnexion</button>
+      <button @click="logout()" class="deconnexion">Deconnexion <font-awesome-icon icon="right-from-bracket" /></button>
 
       <nav>
-
-        <RouterLink to="/">Log </RouterLink>
-        <span> // </span>
-        <RouterLink to="/post">Tous les posts </RouterLink>
-        <span> // </span>
-        <RouterLink  to="/profil">Profil </RouterLink>
+        
+        <RouterLink  to="/"><font-awesome-icon icon="circle-user" /> </RouterLink>
+        <RouterLink to="/post"><font-awesome-icon icon="book-open" /></RouterLink>
+        <RouterLink  to="/profil"><font-awesome-icon icon="house-chimney-user" /> </RouterLink>
 
       </nav>
     </div>
@@ -42,6 +40,7 @@ export default {
 </template>
 
 <style lang="scss">
+// Variables
 @import "@/assets/sass/_variables.scss";
 // Font family Roboto et montserrat
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,400;1,700&display=swap');
@@ -65,7 +64,12 @@ body {
   min-height: 100vh;
   padding: 30px;
 }
-
+nav{
+  justify-content: space-between;
+}
+svg{
+  padding: 5px;
+}
 #app {
   max-width: 100%;
   // background-color: $blue;

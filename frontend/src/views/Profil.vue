@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="card">
+      
       <!-- <ul>
         <li>{{ user.pseudo }}</li>
         <li>{{ user.email }}</li>
@@ -18,7 +19,7 @@
       </div>
     </div>
 
-    <button  @click="switchModify()" class="button btnDelete">Modifier le profil</button>
+    <button  @click="switchModify()" class="button btnDelete"><font-awesome-icon icon="user-pen" /></button>
     <button @click="deleteAccount(user.id)" class="button btnDelete">Supprimer le profil</button>
 
     <!-- Modification Account -->
@@ -45,7 +46,7 @@
       </div>
 
       <input ref="imgChange" type="file" @change="fileSelected" style="display: none" />
-      <button @click="$refs.imgChange.click()" name="modifyPhoto" class="button btnDelete">Ajouter une photo</button>
+      <button @click="$refs.imgChange.click()" name="modifyPhoto" class="button btnDelete"><font-awesome-icon icon="image-portrait" /></button>
       <button @click="changePhoto(user.id)" class="button btnDelete">Changer la photo de profil</button>
     </div>
 
@@ -161,6 +162,10 @@ export default {
 </script>
 
 <style lang="scss">
+.mode {
+  display: none;
+}
+
 .deconnexion {
   display: block;
 }

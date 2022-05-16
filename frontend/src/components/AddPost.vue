@@ -3,8 +3,8 @@
     <textarea v-model="post" name="newPost" class="card__newPost" id="" placeholder="Quoi de neuf ?" cols="30" rows="10"></textarea>
     <div class="btn">
       <input style="display: none" ref="imgInput" type="file" @change="onFileSelected" />
-      <button @click="$refs.imgInput.click()" name="ajoutPhoto" class="button">Ajouter une photo</button>
-      <button class="button" @click="addPost()">Envoyer</button>
+      <button @click="$refs.imgInput.click()" name="ajoutPhoto" class="button"><font-awesome-icon icon="image" /></button>
+      <button class="button" @click="addPost()"><font-awesome-icon icon="play" /></button>
     </div>
   </div>
 </template>

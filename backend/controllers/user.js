@@ -61,10 +61,8 @@ exports.signup = async (req, res) => {
 /**################################################################# */
 /************************ Modifier compte user************************/
 exports.modifyAccount = async (req, res) => {
-    // console.log('req.body ', req.body);
     console.log('req.file ', req.file);
     let userId = parseInt(req.params.id)
-    const user_id = parseInt(req.body.user_id);
     const { pseudo, email, descriptionUser, password } = req.body;
     if (!userId) {
         return res.status(400).json({ message: `Erreur id` })
@@ -86,7 +84,6 @@ exports.modifyAccount = async (req, res) => {
             console.log('Fichier file trouvé');
             console.log(user.imgUser);
             if (user.imgUser != 'http://localhost:8080/images/imgProfilDefault/photoProfilBase.png') {
-            // if (user.imgUser != null) {
                 const ancienneImage = user.imgUser.split(/images/)[1];
                 console.log(ancienneImage);
                 fs.unlink(`./images/${ancienneImage}`, (err => {

@@ -2,20 +2,21 @@
   <div>
     <div :key="index" v-for="(post, index) in posts" class="card">
       <div class="card__profil">
-        <img class="card__profil--img" :src="post.User.imgUser" alt="Photo de profil" />
-        <p class="card__title">{{ post.User.pseudo }}</p>
+        <div class="row">
+          <img class="card__profil--img" :src="post.User.imgUser" alt="Photo de profil" />
+          <p class="card__title">{{ post.User.pseudo }}</p>
+        </div>
 
         <div>
-
-          <button v-if="post.User.id === userId" @click="deletePost(post.id)" class="button btnDelete">Supprimer le post</button>
-          <button v-if="post.User.id === userId && isActive == null"  @click="switchModify(index)" class="button btnDelete">Modifier le post</button>
-          <button v-if="isActive == index" @click="switchModify(index)" class="button btnDelete">Annuler</button>
+          <button v-if="post.User.id === userId && isActive == null" @click="switchModify(index)" class="button btnDelete"><font-awesome-icon icon="pen-to-square" /></button>
+          <button v-if="isActive == index" @click="switchModify(index)" class="button btnDelete"><font-awesome-icon icon="xmark" /></button>
+          <button v-if="post.User.id === userId" @click="deletePost(post.id)" class="button btnDelete"><font-awesome-icon icon="trash" /></button>
 
           <div v-show="isActive == index">
             <input type="text" @input="modifPost = $event.target.value" name="newPost" class="card__newPost" placeholder="Modifier post " />
             <input ref="imgInputChange" type="file" @change="fileSelected" style="display: none" />
 
-            <button @click="$refs.imgInputChange[index].click()" name="modifyPhoto" class="button btnDelete">Ajouter une photo</button>
+            <button @click="$refs.imgInputChange[index].click()" name="modifyPhoto" class="button btnDelete"><font-awesome-icon icon="image" /></button>
             <button @click="modifyPost(modifPost, post.id)" class="button btnDelete">Envoyer le post modifier</button>
           </div>
         </div>
@@ -60,7 +61,7 @@ export default {
       post: ref(""),
       newImage: null,
       modifPost: "",
-      userId: ""
+      userId: "",
     };
   },
   mounted() {
@@ -108,7 +109,10 @@ export default {
 
 <style lang="scss">
 @import "@/assets/sass/_variables.scss";
-
+.row{
+  display: flex;
+  align-items: center;
+}
 .btnDelete {
   padding: 5px;
   width: auto;

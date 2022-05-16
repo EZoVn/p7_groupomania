@@ -19,7 +19,7 @@ if (!user) {
     } catch (ex) {
         user = {
             userId: -1,
-            token: '',
+            access_token: '',
         };
     }
 }
@@ -42,9 +42,9 @@ const store = createStore({
         logout: function (state) {
             state.user = {
                 userId: -1,
-                token: ''
+                access_token: ''
             },
-            localStorage.removeItem('user');
+                localStorage.removeItem('user');
         }
     },
     actions: {
@@ -67,8 +67,6 @@ const store = createStore({
             return new Promise((resolve, reject) => {
                 instance.post('/auth/login', userInfos)
                     .then(res => {
-                        // A retirer cle token dans la console
-                        console.log(res.data);
                         commit('setStatus', '');
                         commit('logUser', res.data);
                         resolve(res)
