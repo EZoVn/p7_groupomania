@@ -10,7 +10,7 @@ const fs = require('fs');
 exports.allUsers = (req, res) => {
     User.findAll()
         .then(users => res.json({ data: users }))
-        .catch(err => res.status(500).json({ message: 'Database Error', error: err })); //Ne pas transmettre les erreurs en production. Transmet trop d'informations
+        .catch(err => res.status(500).json({ message: 'Database Error' })); //Ne pas transmettre les erreurs en production. Transmet trop d'informations
 };
 
 /**################################################################# */
@@ -28,7 +28,7 @@ exports.oneUser = (req, res) => {
             }
             return res.status(200).json({ data: user });
         })
-        .catch(err => res.status(500).json({ message: 'Database Error', error: err }));
+        .catch(err => res.status(500).json({ message: 'Database Error'}));
 };
 
 /**################################################################# */
@@ -75,15 +75,12 @@ exports.modifyAccount = async (req, res) => {
         }
 
         if (req.body.password && req.body.password != '') {
-            console.log('why');
             let hash = await bcrypt.hash(req.body.password, parseInt(process.env.BCRYPT_SALT_ROUND))
             req.body.password = hash;
         }
 
         if (req.file) {
-            console.log('Fichier file trouvé');
-            console.log(user.imgUser);
-            if (user.imgUser != 'http://localhost:8080/images/imgProfilDefault/photoProfilBase.png') {
+            if (user.imgUser != 'http://localhost:8080/images/_photoProfilBase.png') {
                 const ancienneImage = user.imgUser.split(/images/)[1];
                 console.log(ancienneImage);
                 fs.unlink(`./images/${ancienneImage}`, (err => {
@@ -95,19 +92,17 @@ exports.modifyAccount = async (req, res) => {
                 }))
             }
             let imgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-            console.log(imgUrl);
             await User.update({ imgUser: imgUrl }, { where: { id: userId } });
             return res.status(200).json({ message: 'Message modifié avec succès !!' })
 
         }
         else if (!req.file) {
-            console.log('No req.file');
             await User.update(req.body, { where: { id: userId } });
             return res.status(200).json({ message: 'Message modifié avec succès !!' })
         }
 
     } catch (error) {
-        return res.status(500).json({ message: 'Database Error user', error: error })
+        return res.status(500).json({ message: 'Database Error user'})
     }
 }
 
@@ -122,5 +117,5 @@ exports.deleteAccount = (req, res) => {
     }
     User.destroy({ where: { id: userId }, force: true })
         .then(() => res.status(204).json({ message: 'Compte supprimé avec succès !' }))
-        .catch(err => res.status(500).json({ message: 'Database Error', error: err })); //Supprimer error: err en production
+        .catch(err => res.status(500).json({ message: 'Database Error' })); 
 };

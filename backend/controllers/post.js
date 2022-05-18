@@ -91,7 +91,7 @@ exports.deletePost = async (req, res, next) => {
     console.log('user_id', user_id);
 
     const post = await DB.Post.findOne({ where: { id: postId } })
-    console.log(post.user_id);
+    // console.log(post.user_id);
 
     if (post.user_id === user_id) {
 

@@ -1,10 +1,10 @@
 <template>
-    <div class="card">
+    <div class="card row">
         <input type="text" v-model="commentaire" name="newPost" class="card__newPost" 
             placeholder="Ajouter un commentaire ">
-        <div class="btn">
-            <button @click="addComment(commentaire, postId)" class="button btnDelete">Envoyer</button>
-        </div>
+        <!-- <div class="btn"> -->
+            <button @click="addComment(commentaire, postId)" class="button btnDelete"><font-awesome-icon icon="play" /></button>
+        <!-- </div> -->
     </div>
 </template>
 
@@ -33,3 +33,18 @@ export default {
     },
 }
 </script>
+<style lang="scss" scoped>
+input{
+    margin: 0;
+    padding: 16px;
+}
+.button{
+    margin:0;
+    width: 10%;
+}
+@media screen and (max-width: 670px){
+    .button{
+        width: auto;
+    }
+}
+</style>

@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "openclas",
+    "password": "openclass/room",
+    "database": "Groupomania2",
+    "host": "localhost",
+    "dialect": "mysql"
+  }
+}

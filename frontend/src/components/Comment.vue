@@ -10,17 +10,17 @@
           <img class="card__profil--img" :src="comment.User.imgUser" alt="" />
           <p>{{ comment.User.pseudo }}</p>
         </div>
-        <div>
-          
+
+        <div>         
           <button v-if="comment.User.id === userId" @click="switchModify(index)" class="button btnDelete"><font-awesome-icon icon="pen" /></button>
           <button v-if="comment.User.id === userId" @click="deleteComment(comment.id)" class="button btnDelete"><font-awesome-icon icon="trash" /></button>
         </div>
       </div>
 
       <p>{{ comment.comment }}</p>
-      <div v-show="isActive == index">
+      <div v-show="isActive == index" class="row">
         <input type="text" v-model="commentaire" name="newPost" class="card__newPost"  placeholder="Modifier commentaire " />
-        <button @click="modifyComment(commentaire, comment.id)" class="button btnDelete">Envoyer le commentaire modifier</button>
+        <button @click="modifyComment(commentaire, comment.id)" class="button btnDelete"><font-awesome-icon icon="play" /></button>
       </div>
     </div>
   </div>
@@ -82,13 +82,13 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "@/assets/sass/_variables.scss";
 
 
 .comment {
   margin-top: 25px;
-  padding-left: 20px;
+  // padding-left: 20px;
 }
 
 .card {
@@ -110,5 +110,12 @@ export default {
       align-items: center;
     }
   }
+}
+.button{
+  margin: 5px;
+}
+input{
+    margin: 0;
+    padding: 16px;
 }
 </style>

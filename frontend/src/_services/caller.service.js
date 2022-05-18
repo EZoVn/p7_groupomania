@@ -25,7 +25,7 @@ Axios.interceptors.request.use(request => {
 //         console.log('if error');
 //         localStorage.removeItem('user');
 //         // regler le probleme du router en fin de session
-//         router.push('/');
+//         this.$router.push('/');
 //     }
 // })
 

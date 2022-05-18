@@ -2,22 +2,24 @@
   <div>
     <div :key="index" v-for="(post, index) in posts" class="card">
       <div class="card__profil">
-        <div class="row">
+        <div class="row float">
           <img class="card__profil--img" :src="post.User.imgUser" alt="Photo de profil" />
           <p class="card__title">{{ post.User.pseudo }}</p>
         </div>
 
-        <div>
-          <button v-if="post.User.id === userId && isActive == null" @click="switchModify(index)" class="button btnDelete"><font-awesome-icon icon="pen-to-square" /></button>
-          <button v-if="isActive == index" @click="switchModify(index)" class="button btnDelete"><font-awesome-icon icon="xmark" /></button>
-          <button v-if="post.User.id === userId" @click="deletePost(post.id)" class="button btnDelete"><font-awesome-icon icon="trash" /></button>
+        <div class="row">
+          <div class="row">
+            <button v-if="post.User.id === userId && isActive == null" @click="switchModify(index)" class="button btnDelete"><font-awesome-icon icon="pen-to-square" /></button>
+            <button v-if="isActive == index" @click="switchModify(index)" class="button btnDelete"><font-awesome-icon icon="xmark" /></button>
+            <button v-if="post.User.id === userId" @click="deletePost(post.id)" class="button btnDelete"><font-awesome-icon icon="trash" /></button>
+          </div>
 
-          <div v-show="isActive == index">
+          <div class="row" v-show="isActive == index">
             <input type="text" @input="modifPost = $event.target.value" name="newPost" class="card__newPost" placeholder="Modifier post " />
             <input ref="imgInputChange" type="file" @change="fileSelected" style="display: none" />
 
             <button @click="$refs.imgInputChange[index].click()" name="modifyPhoto" class="button btnDelete"><font-awesome-icon icon="image" /></button>
-            <button @click="modifyPost(modifPost, post.id)" class="button btnDelete">Envoyer le post modifier</button>
+            <button @click="modifyPost(modifPost, post.id)" class="button btnDelete"><font-awesome-icon icon="play" /></button>
           </div>
         </div>
       </div>
@@ -73,12 +75,10 @@ export default {
       Axios.delete(`/post/${postId}`).then(() => {
         console.log("Le post :", postId, "a été supprimer avec succès !");
         this.getAllPost();
+        this.isActive = null;
       });
     },
     switchModify(postId) {
-      console.log(postId);
-      console.log(this.isActive);
-      // this.isActive = postId;
       if (this.isActive == postId) {
         this.isActive = null;
       } else {
@@ -107,60 +107,11 @@ export default {
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "@/assets/sass/_variables.scss";
-.row{
-  display: flex;
-  align-items: center;
-}
-.btnDelete {
-  padding: 5px;
-  width: auto;
-}
 
-.card {
-  width: 800px;
-  margin: 10px;
-  padding: 10px;
-  background-color: $blue;
-  color: $grey;
-
-  &__profil {
-    display: flex;
-    align-items: center;
-    margin: 10px 0;
-
-    &--img {
-      width: 50px;
-      height: 50px;
-      margin-right: 5px;
-      border-radius: 25px;
-      object-fit: cover;
-    }
-  }
-
-  &__post {
-    border: 2px solid $red;
-  }
-
-  &__text {
-    font-family: "montserrat", sans-serif;
-    margin-left: 60px;
-  }
-
-  &__img {
-    width: 100%;
-    margin: 10px 0;
-    object-fit: cover;
-    border: 4px solid black;
-    border-radius: 15px;
-  }
-
-  &__newPost {
-    margin-bottom: 10px;
-    width: 97%;
-    padding: 10px;
-    border-radius: 16px;
-  }
+input {
+  margin: 0;
+  padding: 16px;
 }
 </style>

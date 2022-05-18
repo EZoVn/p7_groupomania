@@ -19,7 +19,7 @@ exports.createComments = async (req, res, next) => {
         let com = await DB.Comments.create({ comment, post_id, user_id });
         return res.status(201).json({ Message: 'Commentaire envoyer avec succès', data: com });
     } catch (err) {
-        return res.status(500).json({ message: 'Error Data!', error: err });
+        return res.status(500).json({ message: 'Error Data!' });
     }
 };
 
@@ -42,7 +42,7 @@ exports.getOneComment = async (req, res, next) => {
         if (!comId) return res.status(404).json({ message: `Commentaire non trouvé` });
         return res.status(200).json({ data: comId })
     } catch (err) {
-        return res.status(500).json({ message: 'Database Error', error: err })
+        return res.status(500).json({ message: 'Database Error' })
     }
 };
 

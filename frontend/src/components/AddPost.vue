@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card ">
     <textarea v-model="post" name="newPost" class="card__newPost" id="" placeholder="Quoi de neuf ?" cols="30" rows="10"></textarea>
     <div class="btn">
       <input style="display: none" ref="imgInput" type="file" @change="onFileSelected" />
@@ -53,5 +53,8 @@ export default {
   width: 100%;
   padding: 10px;
   border-radius: 16px;
+}
+.button{
+  width: 100%;
 }
 </style>
