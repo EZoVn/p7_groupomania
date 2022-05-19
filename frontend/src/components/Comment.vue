@@ -62,21 +62,21 @@ export default {
             this.getAllPost();
             this.commentaire = "";
             this.isActive = null;
-            console.log("Le commentaire a bien été modifier !");
+            this.$toast.success("Le commentaire a bien été modifier !")
           })
           .catch((e) => console.log("error", e));
         this.isActive = true;
       } else {
-        console.log("Le commentaire est vide !");
+        this.$toast.alert("Le commentaire n'a pas pu être modifier");
       }
     },
     deleteComment(commentId) {
       Axios.delete(`/comments/${commentId}`)
         .then(() => {
           this.getAllPost();
-          console.log("Le commentaire :", commentId, "a été supprimer avec succès !");
+          this.$toast.show("Le commentaire a bien été supprimer avec succès !")
         })
-        .catch((e) => console.log(`Le commentaire n'a pas été supprimé`, e));
+        .catch(() => this.$toast.alert("Le commentaire n'a pas pu être supprimer"));
     },
   },
 };

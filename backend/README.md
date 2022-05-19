@@ -20,6 +20,6 @@ Ensuite pour créer la structure de la base de donnée entrez la commande ci-des
 npx sequelize-cli db:migrate
 
 
-Une fois la baase de données créer lancer le projet avec la commande :
+Une fois la base de données créer lancer le projet avec la commande :
 
 npm start

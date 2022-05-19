@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('../middleware/multer-config');
-
+const pwd = require('../middleware/password-validator');
 const authCheck = require('../middleware/auth');
 const userCtrl = require('../controllers/user');
 
@@ -14,7 +14,7 @@ router.use((req, res, next) => {
 })
 
 router.get('/', userCtrl.allUsers);
-router.post('/signup',multer, userCtrl.signup);
+router.post('/signup', pwd.passwordSchema, multer, userCtrl.signup);
 router.get('/:id', authCheck, userCtrl.oneUser);
 
 router.delete('/:id',multer ,authCheck, userCtrl.deleteAccount);

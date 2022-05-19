@@ -50,6 +50,7 @@ const store = createStore({
     actions: {
         createAccount: ({ commit }, userInfos) => {
             commit('setStatus', 'loading');
+            console.log(userInfos);
             return new Promise((resolve, reject) => {
                 instance.post('/users/signup', userInfos)
                     .then(res => {

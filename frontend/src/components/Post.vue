@@ -76,6 +76,7 @@ export default {
         console.log("Le post :", postId, "a été supprimer avec succès !");
         this.getAllPost();
         this.isActive = null;
+        this.$toast.show("Post supprimé !")
       });
     },
     switchModify(postId) {
@@ -95,11 +96,10 @@ export default {
       formData.append("message", this.modifPost);
       formData.append("user_id", user.user_id);
       formData.append("file", this.newImage);
-      console.log(formData);
       Axios.put(`/post/${postId}`, formData).then(() => {
         this.getAllPost();
         this.isActive = null;
-        console.log("Le post a été modifier avec succès !");
+        this.$toast.success('Le post a été modifier !');
       });
     },
   },

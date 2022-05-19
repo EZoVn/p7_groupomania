@@ -3,7 +3,10 @@
     <Header />
     <div class="row">
       <h1>Fil d'actualités</h1>
-      <RouterLink to="/profil">{{user.pseudo}}<img class="nav__icon--imgProfil" :src="user.imgUser" alt="" /> </RouterLink>
+      <div class="row">
+        <span class="userPseudo">{{ user.pseudo }}</span>
+        <RouterLink to="/profil"><img class="nav__icon--imgProfil" :src="user.imgUser" alt="" /> </RouterLink>
+      </div>
     </div>
     <AddPost :getAllPost="getAllPost" />
     <Post :posts="posts" :getAllPost="getAllPost" />
@@ -29,7 +32,7 @@ export default {
   data() {
     return {
       posts: [],
-      user:{},
+      user: {},
     };
   },
   created() {
@@ -51,7 +54,7 @@ export default {
 
 <style lang="scss" >
 @import "@/assets/sass/_variables.scss";
-a{
+a {
   text-decoration: none;
   color: black;
 }
@@ -66,7 +69,6 @@ a{
 .nav__icon {
   width: 50px;
   height: 50px;
-  // color: inherit;
   color: $grey;
 }
 .card {
@@ -90,10 +92,19 @@ a{
     background-color: $grey;
   }
 }
-.nav__icon--imgProfil{
+.nav__icon--imgProfil {
   width: 75px;
   height: 75px;
   border-radius: 50px;
+  transition: all 0.4s ease-in;
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+.userPseudo {
+  margin-right: 5px;
+  font-weight: bold;
+  font-size: 20px;
 }
 // Responsive
 @media screen and (max-width: 670px) {
@@ -116,7 +127,7 @@ a{
     width: 200px;
     height: 40px;
   }
-   .nav__icon--imgProfil{
+  .nav__icon--imgProfil {
     width: 45px;
     height: 45px;
   }

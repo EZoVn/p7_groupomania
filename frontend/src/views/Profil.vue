@@ -1,15 +1,14 @@
 <template>
   <div>
     <Header />
-    <!-- icon de retour -->
     <div class="row">
       <RouterLink to="/post"><font-awesome-icon class="nav__icon" icon="arrow-left-long" /></RouterLink>
       <h1>Mon profil</h1>
     </div>
     <div class="card">
-      <img class="card__profil--img" :src="user.imgUser" @click="tt" alt="Photo de profil" />
+      <img class="card__profil--img" :src="user.imgUser"  alt="Photo de profil" />
       <div class="card card__profil">
-        <p class="card__profil--pseudo">Pseudo : {{ user.pseudo }}</p>
+        <p class="card__profil--pseudo">Pseudo : <span>{{ user.pseudo }}</span></p>
         <p class="card__profil--description">Email : {{ user.email }}</p>
       </div>
       <div class="card">
@@ -109,7 +108,7 @@ export default {
       Axios.delete(`/users/${userId}`, { user_id: userId }).then(() => {
         this.$store.commit("logout");
         this.$router.push("/");
-        console.log(`Le compte ${userId} a été supprimer !`);
+        this.$toast.show("Le compte vient d'être supprimé..");
       });
     },
     switchModify() {
@@ -120,12 +119,14 @@ export default {
       Axios.put(`/users/${userId}`, { email: this.newEmail }).then((res) => {
         console.log(res);
         this.getOneUser();
+        this.$toast.success("Email modifier");
       });
     },
     changePseudo(userId) {
       Axios.put(`/users/${userId}`, { pseudo: this.newPseudo }).then((res) => {
         console.log(res);
         this.getOneUser();
+        this.$toast.success("Peudo modifier")
       });
     },
     changePassword(userId) {
@@ -133,15 +134,17 @@ export default {
         Axios.put(`/users/${userId}`, { password: this.newPassword }).then((res) => {
           console.log(res);
           this.getOneUser();
+          this.$toast.success("Mot de passe modifier")
         });
       } else {
-        console.log("error mot de passe non identique");
+        this.$toast.alert("Les mots de passe ne sont pas identique")
       }
     },
     changeDescription(userId) {
       Axios.put(`/users/${userId}`, { descriptionUser: this.newDescription }).then((res) => {
         console.log(res);
         this.getOneUser();
+        this.$toast.success("Description modifier avec succès")
       });
     },
     fileSelected(event) {
@@ -159,7 +162,7 @@ export default {
       fD.append("file", this.newImage);
       Axios.put(`/users/${userId}`, fD, params).then(() => {
         this.getOneUser();
-        console.log("L'utilisateur a été modifier avec succès !");
+        this.$toast.success("Photo de profil modifier")
       });
     },
   },
@@ -168,12 +171,16 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/sass/_variables.scss";
+p{
+  font-weight: bold;
+}
 
 .mode {
   display: none;
 }
 h2 {
-  font-size: 5em;
+  margin-top: 15px;
+  font-size: 3em;
   font-weight: bold;
   color: $grey;
   text-align: center;
@@ -210,9 +217,8 @@ h2 {
   h1 {
     font-size: 2em;
   }
-  // .logo {
-  //   width: 300px;
-  //   height: 60px;
-  // }
+  h2{
+    font-size: 1.5em;
+  }
 }
 </style>

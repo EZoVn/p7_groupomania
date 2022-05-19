@@ -86,12 +86,13 @@ body {
   border: none;
   width: auto;
   padding: 10px;
-  transition: .4s background-color;
+  transition:all ease-in-out .4s background-color;
 
   &:hover {
     cursor: pointer;
-    background-color: rgba(21, 20, 26, 0.7);
+    background-color: $red;
     color: $grey;
+    transform: scale(1.05);
   }
 
 }
@@ -159,6 +160,15 @@ body {
 @media screen and (max-width: 850px) {
   h1 {
     font-size: 3em;
+  }
+}
+@media screen and (max-width: 440px) {
+  h1 {
+    font-size: 1.2em;
+  }
+  .logo {
+    width: 200px;
+    height: 40px;
   }
 }
 </style>

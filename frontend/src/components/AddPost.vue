@@ -29,14 +29,14 @@ export default {
     onFileSelected(event) {
       this.image = event.target.files[0];
     },
-    addPost() {
+    addPost(event) {
       const formData = new FormData();
       formData.append("message", this.post);
       formData.append("user_id", user.user_id);
       formData.append("file", this.image);
       console.log(formData);
-      Axios.post("/post", formData).then((res) => {
-        console.log(res);
+      Axios.post("/post", formData).then(() => {
+        this.$toast.success(`Post envoyer avec succès !`);
         this.image = null;
         this.post = "";
         this.getAllPost();

@@ -17,7 +17,7 @@ export default {
     logout() {
       this.$store.commit("logout");
       this.$router.push("/");
-      // this.reload("/");
+      this.$toast.info("Vous êtes déconnecter !")
     },
   },
 };
@@ -26,9 +26,8 @@ export default {
 <style lang="scss">
 @import "@/assets/sass/_variables.scss";
 .logo {
-  width: 600px;
-  height: 120px;
-}
+  width: 500px;
+  height: 100px;}
 .deconnexion{
   display: none;
   width: 50px;
@@ -39,10 +38,12 @@ export default {
   font-size: 20px;
   border-radius: 25px;
   padding: 5px;
+  transition: all ease-out .5s;
   &:hover {
     cursor: pointer;
     background-color: rgba(21, 20, 26, 0.7);
     color: $red;
+    transform: scale(1.3);
   }
 }
 // Responsive
@@ -52,5 +53,13 @@ export default {
     height: auto;
   }
 }
-
+@media screen and (max-width: 440px) {
+  h1 {
+    font-size: 1.2em;
+  }
+  .logo {
+    width: 200px;
+    height: 40px;
+  }
+}
 </style>

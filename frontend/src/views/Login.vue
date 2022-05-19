@@ -31,7 +31,7 @@ export default {
       } else {
         if (this.email != "" && this.password != "") return true;
         else return false;
-      }  
+      }
     },
     ...mapState(["status"]),
   },
@@ -43,16 +43,42 @@ export default {
       this.mode = "login";
     },
     createAccount() {
-      if (this.password != this.passwordVerif) {
-        return console.error("Mot de passe non identique");
+
+      console.log(this.password);
+      if (this.password.length < 8) {
+        this.$toast.error("Le mot de passe ne contient pas assez de caractères. Entre 8 et 35max", {
+          duration: 3000,
+        });
+      } else if (this.password != this.passwordVerif) {
+        this.$toast.error("Les mots de passes ne sont pas identique", {
+          duration: 3000,
+        });
+      } else if (!/[A-Z]/.test(this.password)) {
+        this.$toast.error("Il faut une lettre majuscule minimum", {
+          duration: 3000,
+        });
+      } else if (!/[a-z]/.test(this.password)) {
+        this.$toast.error("Il faut une lettre minuscule minimum", {
+          duration: 3000,
+        });
+      } else if (!/[0-9]/.test(this.password)) {
+        this.$toast.error("Il faut un chiffre minimum", {
+          duration: 3000,
+        });
+      } else if (!/[!"#$%&'()*+,./:;<=>?@\^_`{|}~-]/.test(this.password)) {
+        this.$toast.error("Il faut un symbole minimum", {
+          duration: 3000,
+        });
+      } else {
+        this.$store.dispatch("createAccount", {
+          pseudo: this.pseudo,
+          email: this.email,
+          password: this.password,
+        });
+          this.$toast.success("Le compte a été créer !");
+          this.mode = "login";
+          this.password = "";
       }
-      this.$store.dispatch("createAccount", {
-        pseudo: this.pseudo,
-        email: this.email,
-        password: this.password,
-      });
-      this.mode = "login";
-      this.password = "";
     },
     login() {
       this.$store
@@ -62,6 +88,7 @@ export default {
         })
         .then(() => {
           this.$router.push("/post");
+          this.$toast.show('Bienvenue')
         });
     },
   },
@@ -106,10 +133,13 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/sass/_variables.scss";
-h1{
+h1 {
   margin-bottom: 10px;
 }
-.deconnexion{
+.error {
+  color: $red;
+}
+.deconnexion {
   display: none;
 }
 .card {
@@ -132,8 +162,7 @@ h1{
   }
 }
 
-
-.button{
+.button {
   &--disabled {
     background: $grey;
     color: #ececec;
@@ -159,7 +188,7 @@ h1{
   font-weight: 500;
   font-size: 16px;
   flex: 1;
-  min-width: 100px;
+  // min-width: 100px;
   color: black;
 
   &::placeholder {
