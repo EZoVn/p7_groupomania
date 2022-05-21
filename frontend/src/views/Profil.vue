@@ -6,9 +6,11 @@
       <h1>Mon profil</h1>
     </div>
     <div class="card">
-      <img class="card__profil--img" :src="user.imgUser"  alt="Photo de profil" />
+      <img class="card__profil--img" :src="user.imgUser" alt="Photo de profil" />
       <div class="card card__profil">
-        <p class="card__profil--pseudo">Pseudo : <span>{{ user.pseudo }}</span></p>
+        <p class="card__profil--pseudo">
+          Pseudo : <span>{{ user.pseudo }}</span>
+        </p>
         <p class="card__profil--description">Email : {{ user.email }}</p>
       </div>
       <div class="card">
@@ -20,30 +22,24 @@
     <button v-if="isActive == true" @click="switchModify()" class="button btnDelete"><font-awesome-icon icon="user-pen" /></button>
     <button v-if="isActive == false" @click="switchModify()" class="button btnDelete"><font-awesome-icon icon="xmark" /></button>
     <button @click="deleteAccount(user.id)" class="button btnDelete">Supprimer le profil</button>
-
-    <!-- Modification Account -->
     <div class="card" :class="{ mode: isActive }">
       <div class="card__modif">
         <input v-model="newPseudo" class="card__newPost" type="text" name="newpseudo" placeholder="Changer de pseudo ici " />
         <button @click="changePseudo(user.id)" class="button btnDelete"><font-awesome-icon icon="check" /></button>
       </div>
-
       <div class="card__modif">
         <input v-model="newEmail" class="card__newPost" type="email" name="newEmail" placeholder="Modifier votre email " />
         <button @click="changeMail(user.id)" class="button btnDelete"><font-awesome-icon icon="check" /></button>
       </div>
-
       <div class="card__modif">
         <input v-model="newPassword" class="card__newPost" type="password" name="newEmail" placeholder="Modifier votre mot de passe " />
         <input v-model="newPasswordVerif" class="card__newPost" type="password" name="newEmail" placeholder="Vérifier votre mot de passe " />
         <button @click="changePassword(user.id)" class="button btnDelete"><font-awesome-icon icon="check" /></button>
       </div>
-
       <div class="card__modif">
         <input v-model="newDescription" class="card__newPost" type="text" name="newDescription" placeholder="Modifier votre description " />
         <button @click="changeDescription(user.id)" class="button btnDelete"><font-awesome-icon icon="check" /></button>
       </div>
-
       <div class="card__modif">
         <p>Modifier la photo</p>
         <input ref="imgChange" type="file" @change="fileSelected" style="display: none" />
@@ -124,23 +120,22 @@ export default {
     changePseudo(userId) {
       Axios.put(`/users/${userId}`, { pseudo: this.newPseudo }).then((res) => {
         this.getOneUser();
-        this.$toast.success("Peudo modifier")
+        this.$toast.success("Peudo modifier");
       });
     },
     changePassword(userId) {
-      if (this.newPassword === this.newPasswordVerif) {
+      let verif = accountService.verifPassword(this.newPassword, this.newPasswordVerif);
+      if (verif) {
         Axios.put(`/users/${userId}`, { password: this.newPassword }).then((res) => {
           this.getOneUser();
-          this.$toast.success("Mot de passe modifier")
+          this.$toast.success("Mot de passe modifier");
         });
-      } else {
-        this.$toast.alert("Les mots de passe ne sont pas identique")
       }
     },
     changeDescription(userId) {
       Axios.put(`/users/${userId}`, { descriptionUser: this.newDescription }).then((res) => {
         this.getOneUser();
-        this.$toast.success("Description modifier avec succès")
+        this.$toast.success("Description modifier avec succès");
       });
     },
     fileSelected(event) {
@@ -157,7 +152,7 @@ export default {
       fD.append("file", this.newImage);
       Axios.put(`/users/${userId}`, fD, params).then(() => {
         this.getOneUser();
-        this.$toast.success("Photo de profil modifier")
+        this.$toast.success("Photo de profil modifier");
       });
     },
   },
@@ -166,7 +161,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/sass/_variables.scss";
-p{
+p {
   font-weight: bold;
 }
 
@@ -197,7 +192,7 @@ h2 {
   h1 {
     font-size: 1.2em;
   }
-  .card__profil{
+  .card__profil {
     display: block;
   }
   .nav__icon {
@@ -212,7 +207,7 @@ h2 {
   h1 {
     font-size: 2em;
   }
-  h2{
+  h2 {
     font-size: 1.5em;
   }
 }

@@ -1,6 +1,7 @@
 <script>
 import { mapState } from "vuex";
 import Header from "@/components/Header.vue";
+import { accountService } from "../_services/account.service";
 
 export default {
   name: "Home",
@@ -47,31 +48,9 @@ export default {
       this.mode = "login";
     },
     createAccount() {
-      if (this.password.length < 8) {
-        this.$toast.error("Le mot de passe ne contient pas assez de caractères. Entre 8 et 35max", {
-          duration: 3000,
-        });
-      } else if (this.password != this.passwordVerif) {
-        this.$toast.error("Les mots de passes ne sont pas identique", {
-          duration: 3000,
-        });
-      } else if (!/[A-Z]/.test(this.password)) {
-        this.$toast.error("Il faut une lettre majuscule minimum", {
-          duration: 3000,
-        });
-      } else if (!/[a-z]/.test(this.password)) {
-        this.$toast.error("Il faut une lettre minuscule minimum", {
-          duration: 3000,
-        });
-      } else if (!/[0-9]/.test(this.password)) {
-        this.$toast.error("Il faut un chiffre minimum", {
-          duration: 3000,
-        });
-      } else if (!/[!"#$%&'()*+,./:;<=>?@\^_`{|}~-]/.test(this.password)) {
-        this.$toast.error("Il faut un symbole minimum", {
-          duration: 3000,
-        });
-      } else {
+      let verifMail = accountService.validEmail(this.email);
+      let verif = accountService.verifPassword(this.password, this.passwordVerif);
+      if (verif && verifMail) {
         this.$store.dispatch("createAccount", {
           pseudo: this.pseudo,
           email: this.email,
