@@ -34,7 +34,6 @@ export default {
       formData.append("message", this.post);
       formData.append("user_id", user.user_id);
       formData.append("file", this.image);
-      console.log(formData);
       Axios.post("/post", formData).then(() => {
         this.$toast.success(`Post envoyer avec succès !`);
         this.image = null;

@@ -2,9 +2,7 @@
 const { DataTypes } = require('sequelize');
 
 /**Définition du modèle Post */
-
-module.exports = (sequelize) => {
-    
+module.exports = (sequelize) => {   
     return Post = sequelize.define('Post', {
         id: { type: DataTypes.INTEGER(11), primaryKey: true, autoIncrement: true, },
         user_id: { type: DataTypes.INTEGER(11), allowNull: false },

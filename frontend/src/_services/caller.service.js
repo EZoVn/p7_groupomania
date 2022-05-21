@@ -13,14 +13,12 @@ Axios.interceptors.request.use(request => {
     if (token) {
         request.headers.Authorization = 'Bearer ' + token;
     }
-
     return request;
 });
 
 Axios.interceptors.response.use(response => {
     return response;
 }, error => {
-    console.log(error.response.status);
     if (error.response.status == 401) {
         localStorage.removeItem('user');
         router.push('/');

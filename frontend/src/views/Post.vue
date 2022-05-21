@@ -23,7 +23,6 @@ let locale = localStorage.getItem("user");
 let localeUser = JSON.parse(locale);
 
 export default {
-  // name: Post,
   components: {
     Post,
     AddPost,

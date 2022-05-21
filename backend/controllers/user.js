@@ -61,7 +61,6 @@ exports.signup = async (req, res) => {
 /**################################################################# */
 /************************ Modifier compte user************************/
 exports.modifyAccount = async (req, res) => {
-    console.log('req.file ', req.file);
     let userId = parseInt(req.params.id)
     const { pseudo, email, descriptionUser, password } = req.body;
     if (!userId) {
@@ -69,7 +68,6 @@ exports.modifyAccount = async (req, res) => {
     }
     try {
         let user = await User.findOne({ where: { id: userId }, raw: true });
-        console.log('modify let user: ', user);
         if (user === null) {
             return res.status(404).json({ message: 'Utilisateur inéxistant !' })
         }
@@ -82,9 +80,7 @@ exports.modifyAccount = async (req, res) => {
         if (req.file) {
             if (user.imgUser != 'http://localhost:8080/images/_photoProfilBase.png') {
                 const ancienneImage = user.imgUser.split(/images/)[1];
-                console.log(ancienneImage);
                 fs.unlink(`./images/${ancienneImage}`, (err => {
-                    console.log('ici');
                     if (err) console.log(err);
                     else {
                         console.log("Ancienne image effacé " + ancienneImage);

@@ -5,7 +5,6 @@ const extractBearer = authorization => {
     if (typeof authorization !== 'string') {
         return false;
     }
-
     const matches = authorization.match(/(bearer)\s+(\S+)/i);
     /**return bearer et le token
      * et matches[2] return uniquement le token
@@ -17,7 +16,6 @@ module.exports = (req, res, next) => {
     try {
         const token = req.headers.authorization && extractBearer(req.headers.authorization);
         const verif = jwt.verify(token, process.env.TOKEN);
-        console.log(verif);
         let userId = parseInt(verif.id)
 
         DB.User.findOne({ where: { id: userId } })
@@ -28,7 +26,6 @@ module.exports = (req, res, next) => {
                     })
                 } else {
                     req.body.user_id = user.id
-                    console.log('auth',req.body);
                     next();
                 }
             })

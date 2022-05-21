@@ -117,14 +117,12 @@ export default {
     },
     changeMail(userId) {
       Axios.put(`/users/${userId}`, { email: this.newEmail }).then((res) => {
-        console.log(res);
         this.getOneUser();
         this.$toast.success("Email modifier");
       });
     },
     changePseudo(userId) {
       Axios.put(`/users/${userId}`, { pseudo: this.newPseudo }).then((res) => {
-        console.log(res);
         this.getOneUser();
         this.$toast.success("Peudo modifier")
       });
@@ -132,7 +130,6 @@ export default {
     changePassword(userId) {
       if (this.newPassword === this.newPasswordVerif) {
         Axios.put(`/users/${userId}`, { password: this.newPassword }).then((res) => {
-          console.log(res);
           this.getOneUser();
           this.$toast.success("Mot de passe modifier")
         });
@@ -142,14 +139,12 @@ export default {
     },
     changeDescription(userId) {
       Axios.put(`/users/${userId}`, { descriptionUser: this.newDescription }).then((res) => {
-        console.log(res);
         this.getOneUser();
         this.$toast.success("Description modifier avec succès")
       });
     },
     fileSelected(event) {
       this.newImage = event.target.files[0];
-      console.log(this.newImage);
     },
     changePhoto(userId) {
       const params = {

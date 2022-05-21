@@ -85,12 +85,9 @@ export default {
 <style lang="scss" scoped>
 @import "@/assets/sass/_variables.scss";
 
-
 .comment {
   margin-top: 25px;
-  // padding-left: 20px;
 }
-
 .card {
   &__comment {
     margin: 5px;
@@ -98,13 +95,11 @@ export default {
     border: 1px solid $grey;
     border-radius: 25px;
     background-image: linear-gradient(57deg, $blue 0%, $grey 130%);
-
     &--info {
       display: flex;
       justify-content: space-between;
       margin-bottom: 15px;
     }
-
     &--user {
       display: flex;
       align-items: center;

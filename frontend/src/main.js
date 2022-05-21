@@ -9,7 +9,6 @@ import Toaster from "@meforma/vue-toaster";
 
 library.add(faPenToSquare, faPen, faUserPen, faXmark, faTrash, faCircleUser, faHouseChimneyUser, faImage, faPlay, faImagePortrait, faArrowLeftLong, faRightFromBracket, faCheck);
 
-
 const app = createApp(App)
 
 app.use(router)

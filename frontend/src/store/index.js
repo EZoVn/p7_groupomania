@@ -37,7 +37,6 @@ const store = createStore({
             instance.defaults.headers.common['Authorization'] = user.access_token;
             localStorage.setItem('user', JSON.stringify(user));
             state.user = user;
-            console.log(user);
         },
         logout: function (state) {
             state.user = {
@@ -50,7 +49,6 @@ const store = createStore({
     actions: {
         createAccount: ({ commit }, userInfos) => {
             commit('setStatus', 'loading');
-            console.log(userInfos);
             return new Promise((resolve, reject) => {
                 instance.post('/users/signup', userInfos)
                     .then(res => {

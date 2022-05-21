@@ -6,18 +6,15 @@
           <img class="card__profil--img" :src="post.User.imgUser" alt="Photo de profil" />
           <p class="card__title">{{ post.User.pseudo }}</p>
         </div>
-
         <div class="row">
           <div class="row">
             <button v-if="post.User.id === userId && isActive == null" @click="switchModify(index)" class="button btnDelete"><font-awesome-icon icon="pen-to-square" /></button>
             <button v-if="isActive == index" @click="switchModify(index)" class="button btnDelete"><font-awesome-icon icon="xmark" /></button>
             <button v-if="post.User.id === userId" @click="deletePost(post.id)" class="button btnDelete"><font-awesome-icon icon="trash" /></button>
           </div>
-
           <div class="row" v-show="isActive == index">
             <input type="text" @input="modifPost = $event.target.value" name="newPost" class="card__newPost" placeholder="Modifier post " />
             <input ref="imgInputChange" type="file" @change="fileSelected" style="display: none" />
-
             <button @click="$refs.imgInputChange[index].click()" name="modifyPhoto" class="button btnDelete"><font-awesome-icon icon="image" /></button>
             <button @click="modifyPost(modifPost, post.id)" class="button btnDelete"><font-awesome-icon icon="play" /></button>
           </div>
@@ -73,10 +70,9 @@ export default {
   methods: {
     deletePost(postId) {
       Axios.delete(`/post/${postId}`).then(() => {
-        console.log("Le post :", postId, "a été supprimer avec succès !");
         this.getAllPost();
         this.isActive = null;
-        this.$toast.show("Post supprimé !")
+        this.$toast.show("Post supprimé !");
       });
     },
     switchModify(postId) {
@@ -88,7 +84,6 @@ export default {
     },
     fileSelected(event) {
       this.newImage = event.target.files[0];
-      console.log(this.newImage);
     },
     modifyPost(modifPost, postId) {
       let user = accountService.getLocalStorage();
@@ -99,7 +94,7 @@ export default {
       Axios.put(`/post/${postId}`, formData).then(() => {
         this.getAllPost();
         this.isActive = null;
-        this.$toast.success('Le post a été modifier !');
+        this.$toast.success("Le post a été modifier !");
       });
     },
   },

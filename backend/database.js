@@ -18,7 +18,6 @@ const sequelize = new Sequelize(
 );
 
 /**Mise en palce des relations entre les tables 
- * 
  * je ramene mes models dans ce fichier
  * a chaque model j'envoi sequelize ligne 8
 */

@@ -26,11 +26,15 @@ export default {
   computed: {
     validatedFields() {
       if (this.mode == "create") {
-        if (this.pseudo != "" && this.email != "" && this.password != "") return true;
-        else return false;
+        if (this.pseudo != "" && this.email != "" && this.password != "") {
+          return true;
+        }
+        return false;
       } else {
-        if (this.email != "" && this.password != "") return true;
-        else return false;
+        if (this.email != "" && this.password != "") {
+          return true;
+        }
+        return false;
       }
     },
     ...mapState(["status"]),
@@ -43,8 +47,6 @@ export default {
       this.mode = "login";
     },
     createAccount() {
-
-      console.log(this.password);
       if (this.password.length < 8) {
         this.$toast.error("Le mot de passe ne contient pas assez de caractères. Entre 8 et 35max", {
           duration: 3000,
@@ -75,9 +77,9 @@ export default {
           email: this.email,
           password: this.password,
         });
-          this.$toast.success("Le compte a été créer !");
-          this.mode = "login";
-          this.password = "";
+        this.$toast.success("Le compte a été créer !");
+        this.mode = "login";
+        this.password = "";
       }
     },
     login() {
@@ -88,7 +90,7 @@ export default {
         })
         .then(() => {
           this.$router.push("/post");
-          this.$toast.show('Bienvenue')
+          this.$toast.show("Bienvenue");
         });
     },
   },

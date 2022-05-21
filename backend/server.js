@@ -2,6 +2,11 @@ const app = require('./app');
 
 const DB = require('./database');
 
+/**function normalizePort pour renvoyer un port valide
+ * si port est un nombre renvoi la valeur
+ * et s'il est supérieur ou égale a 0 retourne le port
+ * sinon retourne faux
+ */
 const normalizePort = val => {
     const port = parseInt(val, 10);
     if (isNaN(port)) {
@@ -11,9 +16,20 @@ const normalizePort = val => {
     } return false;
 };
 
+/**On utilise le port de .env s'il est préciser 
+ * sinon on utilisera par defaut le port 3000 
+ * généralement utiliser pour du developpement
+ */
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
+/**Gestion des erreurs 
+ * si error.syscall different d'ecoute arrete et renvoi error
+ * switch des erreurs
+ * si la connexion a échouer pour non permission renvoi le msg d'erreur
+ * si l'addresse est déjà utilisé
+ * et default si aucun des cas n'est trouvé
+*/
 const errorHandler = error => {
     if (error.syscall !== 'listen') {
         throw error;
@@ -32,7 +48,11 @@ const errorHandler = error => {
     }
 };
 
-// Start server avec database sequelize
+/* Demmarrage du server avec la database sequelize
+ * Ecoute du serveur
+ * test s'il n'y a pas d'erreur en priorité
+ * ecoute le serveur et renvoi le port utilisé
+*/
 DB.sequelize.authenticate()
     .then(() => console.log('Database connection OK'))
     .then(() => {

@@ -14,6 +14,7 @@ router.use((req, res, next) => {
     console.log('Cmd executer le : ', event.toString());
     next();
 })
+
 /**afficher tous les posts
  * afficher un post
  * afficher les post d'un utilisateur
