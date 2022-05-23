@@ -15,7 +15,8 @@ BCRYPT_SALT_ROUND=10
 TOKEN=jesuisunephrasehyperlongue
 TOKEN_DURING=1 hour
 
-Ensuite pour créer la structure de la base de donnée entrez la commande ci-dessous :
+Créer une base de donnée qui porte le nom 'groupomania',
+ensuite pour créer la structure de la base de donnée entrez la commande ci-dessous :
 
 npx sequelize-cli db:migrate
 

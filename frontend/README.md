@@ -6,6 +6,6 @@ faire la commande : npm install
 
 Ensuite pour lancer le projet faire la commande :
 
-npm run build
+npm run dev
 
 Ouvrir votre navigateur et aller sur : http://localhost:3000/
