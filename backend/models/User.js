@@ -11,6 +11,7 @@ module.exports = (sequelize) => {
         password: { type: DataTypes.STRING(128), is: /^[0-9a-f]{64$}/i },
         imgUser:{type: DataTypes.STRING, defaultValue: 'http://localhost:8080/images/_photoProfilBase.png'},
         descriptionUser: {type: DataTypes.STRING(255),defaultValue: '', allowNull: false},
+        isAdmin: {type: DataTypes.BOOLEAN,allowNull: true, defaultValue: false}
     });
     User.checkPassword = async (password, originel) => {
         return await bcrypt.compare(password, originel);

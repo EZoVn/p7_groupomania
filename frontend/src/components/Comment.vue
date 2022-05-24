@@ -12,8 +12,8 @@
         </div>
 
         <div>         
+          <button v-if="comment.User.id === userId || isAdmin === 1" @click="deleteComment(comment.id)" class="button btnDelete"><font-awesome-icon icon="trash" /></button>
           <button v-if="comment.User.id === userId" @click="switchModify(index)" class="button btnDelete"><font-awesome-icon icon="pen" /></button>
-          <button v-if="comment.User.id === userId" @click="deleteComment(comment.id)" class="button btnDelete"><font-awesome-icon icon="trash" /></button>
         </div>
       </div>
 
@@ -37,6 +37,7 @@ export default {
       isActive: null,
       commentaire: "",
       userId: "",
+      isAdmin: ""
     };
   },
   props: {
@@ -46,6 +47,8 @@ export default {
   mounted() {
     let user = accountService.getLocalStorage();
     this.userId = user.user_id;
+    this.isAdmin = user.isAdmin;
+    console.log('userComment', user);
   },
   methods: {
     switchModify(commentId) {
@@ -67,7 +70,7 @@ export default {
           .catch((e) => console.log("error", e));
         this.isActive = true;
       } else {
-        this.$toast.alert("Le commentaire n'a pas pu être modifier");
+        this.$toast.error("Le commentaire n'a pas pu être modifier");
       }
     },
     deleteComment(commentId) {
@@ -76,7 +79,7 @@ export default {
           this.getAllPost();
           this.$toast.show("Le commentaire a bien été supprimer avec succès !")
         })
-        .catch(() => this.$toast.alert("Le commentaire n'a pas pu être supprimer"));
+        .catch(() => this.$toast.error("Le commentaire n'a pas pu être supprimer"));
     },
   },
 };

@@ -68,13 +68,13 @@ exports.modifyPost = async (req, res, next) => {
 // Supprimer un message
 exports.deletePost = async (req, res, next) => {
     let postId = parseInt(req.params.id)
+    const isAdmin = req.body.isAdmin
     if (!postId) {
         return res.status(404).json({ message: `ID non connu` })
     }
     const user_id = req.body.user_id
     const post = await DB.Post.findOne({ where: { id: postId } })
-
-    if (post.user_id === user_id) {
+    if (post.user_id === user_id || isAdmin === true) {
         const file = post.dataValues.imgUrl;
         if (file) {
             const filename = file.split('/images/')[1];

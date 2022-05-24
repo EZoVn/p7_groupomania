@@ -1,14 +1,13 @@
 import axios from 'axios';
 import router from '@/router'
+import { accountService } from "../_services/account.service";
 
 const Axios = axios.create({
     baseURL: 'http://localhost:8080'
 });
 
-let locale = localStorage.getItem('user');
-let user = JSON.parse(locale);
-
 Axios.interceptors.request.use(request => {
+    let user = accountService.getLocalStorage();
     let token = user.access_token;
     if (token) {
         request.headers.Authorization = 'Bearer ' + token;

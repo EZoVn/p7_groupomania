@@ -7,6 +7,7 @@
 
 <script>
 import Axios from "@/_services/caller.service";
+import { accountService } from "../_services/account.service";
 
 export default {
   name: "AddComment",
@@ -21,7 +22,8 @@ export default {
   },
   methods: {
     addComment(comment, postId) {
-      Axios.post(`/comments/${[postId]}`, { comment }).then(() => {
+      let user = accountService.getLocalStorage();
+      Axios.post(`/comments/${[postId]}`, { comment, user_id: user.user_id }).then(() => {
         this.commentaire = "";
         this.getAllPost();
       });

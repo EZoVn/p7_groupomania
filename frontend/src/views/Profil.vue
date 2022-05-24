@@ -60,8 +60,6 @@ import { ref } from "vue";
 import { accountService } from "../_services/account.service";
 import Header from "@/components/Header.vue";
 
-let locale = localStorage.getItem("user");
-let localeUser = JSON.parse(locale);
 
 export default {
   name: "Profil",
@@ -93,10 +91,12 @@ export default {
   },
   methods: {
     getAllPostUser() {
-      Axios.get(`/post/postUser/${localeUser.user_id}`).then((res) => (this.postsUser = res.data.data));
+      let user = accountService.getLocalStorage();
+      Axios.get(`/post/postUser/${user.user_id}`).then((res) => (this.postsUser = res.data.data));
     },
     getOneUser() {
-      Axios.get(`/users/${localeUser.user_id}`).then((res) => {
+      let user = accountService.getLocalStorage();
+      Axios.get(`/users/${user.user_id}`).then((res) => {
         this.user = res.data.data;
       });
     },

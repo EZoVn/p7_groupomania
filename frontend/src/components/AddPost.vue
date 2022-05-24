@@ -12,7 +12,6 @@
 <script>
 import Axios from "@/_services/caller.service";
 import { accountService } from "../_services/account.service";
-let user = accountService.getLocalStorage();
 
 export default {
   name: "AddPost",
@@ -30,6 +29,7 @@ export default {
       this.image = event.target.files[0];
     },
     addPost(event) {
+      let user = accountService.getLocalStorage();
       const formData = new FormData();
       formData.append("message", this.post);
       formData.append("user_id", user.user_id);

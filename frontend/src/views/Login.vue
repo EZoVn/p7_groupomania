@@ -68,8 +68,8 @@ export default {
           password: this.password,
         })
         .then(() => {
-          this.$router.push("/post");
           this.$toast.show("Bienvenue");
+          this.$router.push("/post");
         });
     },
   },

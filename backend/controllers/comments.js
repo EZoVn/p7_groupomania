@@ -2,7 +2,9 @@ const DB = require('../database');
 
 /**Créer un commentaire */
 exports.createComments = async (req, res, next) => {
+    console.log(req.body);
     const { comment, user_id } = req.body;
+    console.log(user_id);
     const post_id = parseInt(req.params.post_id);
 
     if (!user_id || !comment) {
@@ -66,13 +68,14 @@ exports.modifyComment = async (req, res, next) => {
 /**Supprimer un commentaire */
 exports.deleteComment = async (req, res, next) => {
     let comId = parseInt(req.params.id)
+    const isAdmin = req.body.isAdmin
     if (!comId) {
         return res.status(404).json({ message: `ID non connu` })
     }
     try {
         const comment = await DB.Comments.findOne({ where: { id: comId } })
         const user_id = req.body.user_id
-        if (comment.user_id === user_id) {
+        if (comment.user_id === user_id || isAdmin === true) {
             const del = await DB.Comments.destroy({ where: { id: comId }, force: true })
             return res.status(204).json({ message: 'Commentaire supprimé !', del })
         } else {

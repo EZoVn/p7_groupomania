@@ -15,9 +15,11 @@ const extractBearer = authorization => {
 module.exports = (req, res, next) => {
     try {
         const token = req.headers.authorization && extractBearer(req.headers.authorization);
+        console.log(token);
         const verif = jwt.verify(token, process.env.TOKEN);
         let userId = parseInt(verif.id)
-
+        req.body.user_id = null;
+        console.log(verif);
         DB.User.findOne({ where: { id: userId } })
             .then(user => {
                 if (!user) {
@@ -26,6 +28,7 @@ module.exports = (req, res, next) => {
                     })
                 } else {
                     req.body.user_id = user.id
+                    req.body.isAdmin = user.isAdmin
                     next();
                 }
             })

@@ -10,7 +10,7 @@
           <div class="row">
             <button v-if="post.User.id === userId && isActive == null" @click="switchModify(index)" class="button btnDelete"><font-awesome-icon icon="pen-to-square" /></button>
             <button v-if="isActive == index" @click="switchModify(index)" class="button btnDelete"><font-awesome-icon icon="xmark" /></button>
-            <button v-if="post.User.id === userId" @click="deletePost(post.id)" class="button btnDelete"><font-awesome-icon icon="trash" /></button>
+            <button v-if="post.User.id === userId || isAdmin == true" @click="deletePost(post.id)" class="button btnDelete"><font-awesome-icon icon="trash" /></button>
           </div>
           <div class="row" v-show="isActive == index">
             <input type="text" @input="modifPost = $event.target.value" name="newPost" class="card__newPost" placeholder="Modifier post " />
@@ -41,7 +41,6 @@ import { ref } from "vue";
 import Axios from "@/_services/caller.service";
 import Comment from "./Comment.vue";
 import AddComment from "./AddComment.vue";
-
 import { accountService } from "../_services/account.service";
 
 export default {
@@ -61,11 +60,13 @@ export default {
       newImage: null,
       modifPost: "",
       userId: "",
+      isAdmin: false,
     };
   },
   mounted() {
     let user = accountService.getLocalStorage();
     this.userId = user.user_id;
+    this.isAdmin = user.isAdmin;
   },
   methods: {
     deletePost(postId) {

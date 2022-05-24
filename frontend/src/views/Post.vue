@@ -4,6 +4,8 @@
     <div class="row">
       <h1>Fil d'actualités</h1>
       <div class="row">
+        <!-- <span class="userPseudo">profil</span>
+        <RouterLink to="/profil"><img class="nav__icon--imgProfil" src="../assets/images/_photoProfilBase.png" alt="" /> </RouterLink> -->
         <span class="userPseudo">{{ user.pseudo }}</span>
         <RouterLink to="/profil"><img class="nav__icon--imgProfil" :src="user.imgUser" alt="" /> </RouterLink>
       </div>
@@ -18,9 +20,6 @@ import Axios from "@/_services/caller.service";
 import AddPost from "../components/AddPost.vue";
 import Post from "../components/Post.vue";
 import Header from "@/components/Header.vue";
-
-let locale = localStorage.getItem("user");
-let localeUser = JSON.parse(locale);
 
 export default {
   components: {
@@ -43,6 +42,8 @@ export default {
       Axios.get("/post/").then((res) => (this.posts = res.data.data));
     },
     getOneUser() {
+      let locale = localStorage.getItem("user");
+      let localeUser = JSON.parse(locale);
       Axios.get(`/users/${localeUser.user_id}`).then((res) => {
         this.user = res.data.data;
       });

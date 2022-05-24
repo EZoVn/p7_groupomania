@@ -23,7 +23,7 @@ exports.login = async (req, res) => {
             email: user.email,
         }, process.env.TOKEN,
             { expiresIn: process.env.TOKEN_DURING });
-        return res.status(200).json({ access_token: token, user_id: user.id })
+        return res.status(200).json({ access_token: token, user_id: user.id, isAdmin: user.isAdmin })
     } catch (error) {
         if (error.name == 'SequelizeDatabaseError') {
             res.status(500).json({ message: 'Database Error' });
